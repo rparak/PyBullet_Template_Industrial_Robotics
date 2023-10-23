@@ -95,6 +95,8 @@ class Robot_Cls(object):
             if info[2] in [pb.JOINT_REVOLUTE, pb.JOINT_PRISMATIC]:
                 self.__theta_index.append(i)
 
+        #pb.addUserDebugLine([0.5, 0.0, 0.0], [0.5, 0.0, 1.0], [0.0, 1.0, 0.2], 1.0)
+
     def __Set_Env_Parameters(self, enable_gui: int, camera_properties: tp.Dict):
         # ...
         pb.connect(pb.GUI, options='--background_color_red=0.0 --background_color_green=0.0 --background_color_blue=0.0')
@@ -216,6 +218,8 @@ class Robot_Cls(object):
             print('[ERROR] Incorrect reset mode selected. The selected mode must be chosen from the three options (Zero, Home, Individual).')
 
     def Set_Absolute_Joint_Position(self, theta: tp.List[float], t_0: float, t_1: float) -> bool:
+        # targetVelocity = ...
+        # pb.VELOCITY_CONTROL
         try:
             assert self.__Robot_Parameters_Str.Theta.Zero.size == theta.size
 
@@ -236,7 +240,7 @@ class Robot_Cls(object):
                     else:
                         print(f'[WARNING] The desired input joint {th_i} in index {i} is out of limit.')
                         return False
-                    
+
                 # ...
                 self.Step()
 
