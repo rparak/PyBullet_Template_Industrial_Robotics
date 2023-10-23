@@ -41,10 +41,6 @@ class Theta_Parameters_Str(object):
     #       Note: 'X', 'Z'
     #       Unit [Vector<string>]
     Axis: tp.List[str] = field(default_factory=list)
-    #   Identification of the axis direction.
-    #       Note: (+1) - Positive, (-1) - Negative
-    #       Unit [Vector<int>]
-    Direction: tp.List[int] = field(default_factory=list)
 
 @dataclass
 class T_Parameters_Str:
@@ -151,7 +147,6 @@ Universal_Robots_UR3_Str.Theta.Name = [f'Joint_1_{Universal_Robots_UR3_Str.Name}
                                        f'Joint_6_{Universal_Robots_UR3_Str.Name}_ID_{Universal_Robots_UR3_Str.Id:03}']
 Universal_Robots_UR3_Str.Theta.Type = ['R', 'R', 'R', 'R', 'R', 'R']
 Universal_Robots_UR3_Str.Theta.Axis = ['Z', 'Z', 'Z', 'Z', 'Z', 'Z']
-Universal_Robots_UR3_Str.Theta.Direction = np.array([1, 1, 1, 1, 1, 1], dtype=np.int8)
 Universal_Robots_UR3_Str.External_Axis = False
 
 """
@@ -199,7 +194,6 @@ ABB_IRB_120_Str.Theta.Name = [f'Joint_1_{ABB_IRB_120_Str.Name}_ID_{ABB_IRB_120_S
                               f'Joint_6_{ABB_IRB_120_Str.Name}_ID_{ABB_IRB_120_Str.Id:03}']
 ABB_IRB_120_Str.Theta.Type = ['R', 'R', 'R', 'R', 'R', 'R']
 ABB_IRB_120_Str.Theta.Axis = ['Z', 'Z', 'Z', 'Z', 'Z', 'Z']
-ABB_IRB_120_Str.Theta.Direction = np.array([1.0, 1.0, 1.0, 1.0, 1.0, 1.0], dtype=np.int8)
 ABB_IRB_120_Str.External_Axis = False
 
 """
@@ -250,7 +244,6 @@ ABB_IRB_120_L_Ax_Str.Theta.Name = [f'Joint_L_{ABB_IRB_120_L_Ax_Str.Name}_ID_{ABB
                                    f'Joint_6_{ABB_IRB_120_L_Ax_Str.Name}_ID_{ABB_IRB_120_L_Ax_Str.Id:03}']
 ABB_IRB_120_L_Ax_Str.Theta.Type = ['P', 'R', 'R', 'R', 'R', 'R', 'R']
 ABB_IRB_120_L_Ax_Str.Theta.Axis = ['X', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z']
-ABB_IRB_120_L_Ax_Str.Theta.Direction = np.array([-1, 1, 1, 1, 1, 1, 1], dtype=np.int8)
 ABB_IRB_120_L_Ax_Str.External_Axis = True
 
 """
@@ -308,7 +301,6 @@ ABB_IRB_14000_R_Str.Theta.Name = [f'Joint_1_{ABB_IRB_14000_R_Str.Name}_ID_{ABB_I
                                   f'Joint_6_{ABB_IRB_14000_R_Str.Name}_ID_{ABB_IRB_14000_R_Str.Id:03}']
 ABB_IRB_14000_R_Str.Theta.Type = ['R', 'R', 'R', 'R', 'R', 'R', 'R']
 ABB_IRB_14000_R_Str.Theta.Axis = ['Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z']
-ABB_IRB_14000_R_Str.Theta.Direction = np.array([1, 1, 1, 1, 1, 1, 1], dtype=np.int8)
 ABB_IRB_14000_R_Str.External_Axis = False
 
 """
@@ -363,7 +355,6 @@ ABB_IRB_14000_L_Str.Theta.Name = [f'Joint_1_{ABB_IRB_14000_L_Str.Name}_ID_{ABB_I
                                   f'Joint_6_{ABB_IRB_14000_L_Str.Name}_ID_{ABB_IRB_14000_L_Str.Id:03}']
 ABB_IRB_14000_L_Str.Theta.Type = ['R', 'R', 'R', 'R', 'R', 'R', 'R']
 ABB_IRB_14000_L_Str.Theta.Axis = ['Z', 'Z', 'Z', 'Z', 'Z', 'Z', 'Z']
-ABB_IRB_14000_L_Str.Theta.Direction = np.array([1, 1, 1, 1, 1, 1, 1], dtype=np.int8)
 ABB_IRB_14000_L_Str.External_Axis = False
 
 """
@@ -406,5 +397,4 @@ EPSON_LS3_B401S_Str.Theta.Name = [f'Joint_1_{EPSON_LS3_B401S_Str.Name}_ID_{EPSON
                                   f'Joint_4_{EPSON_LS3_B401S_Str.Name}_ID_{EPSON_LS3_B401S_Str.Id:03}']
 EPSON_LS3_B401S_Str.Theta.Type = ['R', 'R', 'P', 'R']
 EPSON_LS3_B401S_Str.Theta.Axis = ['Z', 'Z', 'Z', 'Z']
-EPSON_LS3_B401S_Str.Theta.Direction = np.array([1, 1, -1, 1], dtype=np.int8)
 EPSON_LS3_B401S_Str.External_Axis = False

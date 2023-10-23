@@ -66,9 +66,35 @@ class Robot_Cls(object):
         self.__Set_Env_Parameters(properties['Enable_GUI'], properties['Camera'])
 
         # ...
-        self.__robot_id = pb.loadURDF(urdf_file_path, [0, 0, 0], [0, 0, 0, 1], useFixedBase=True, flags=pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES)
+        self.__external_object = []
 
-    
+        # ...
+        p = self.__Robot_Parameters_Str.T.Base.p.all(); q = self.__Robot_Parameters_Str.T.Base.Get_Rotation('QUATERNION')
+        
+        if properties['External_Base'] != None:
+            base_id = pb.loadURDF(properties['External_Base'], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0], 
+                                 useFixedBase=True)
+            
+            # disable all collisions with the base_id
+            pb.setCollisionFilterGroupMask(base_id, -1, 0, 0)
+
+            # ...
+            self.__robot_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], useFixedBase=True, 
+                                        flags=pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES)
+            
+            # ...
+            pb.setCollisionFilterPair(self.__robot_id, base_id, -1,-1, 1)
+        else:
+            # ...
+            self.__robot_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], useFixedBase=True, 
+                                        flags=pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES)
+        # ...
+        self.__theta_index = []
+        for i in range(pb.getNumJoints(self.__robot_id)):
+            info = pb.getJointInfo(self.__robot_id , i)
+            if info[2] in [pb.JOINT_REVOLUTE, pb.JOINT_PRISMATIC]:
+                self.__theta_index.append(i)
+
     def __Set_Env_Parameters(self, enable_gui: int, camera_properties: tp.Dict):
         # ...
         pb.connect(pb.GUI, options='--background_color_red=0.0 --background_color_green=0.0 --background_color_blue=0.0')
@@ -85,7 +111,6 @@ class Robot_Cls(object):
         # ...
         pb.configureDebugVisualizer(pb.COV_ENABLE_RENDERING, 1)
         pb.configureDebugVisualizer(pb.COV_ENABLE_SHADOWS, 1)
-        pb.configureDebugVisualizer(pb.COV_ENABLE_PLANAR_REFLECTION, 0)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, enable_gui)
         pb.configureDebugVisualizer(pb.COV_ENABLE_MOUSE_PICKING, 0)
 
@@ -94,7 +119,7 @@ class Robot_Cls(object):
 
         # ...
         pb.changeVisualShape(plane_id, -1, textureUniqueId=pb.loadTexture('/../../../Textures/Plane.png'))
-        pb.changeVisualShape(plane_id, -1, rgbaColor=[0.75, 0.75, 0.75, 0.75])
+        pb.changeVisualShape(plane_id, -1, rgbaColor=[0.55, 0.55, 0.55, 0.95])
 
     @property
     def is_connected(self) -> bool:
@@ -108,18 +133,30 @@ class Robot_Cls(object):
     def Theta(self) -> tp.List[float]:
         theta_out = np.zeros(self.__Robot_Parameters_Str.Theta.Zero.size, 
                              dtype=np.float64)
-        for i in range(pb.getNumJoints(self.__robot_id) - 1):
-            theta_out[i] = pb.getJointState(self.__robot_id, i)[0]
+        for i, th_index in enumerate(self.__theta_index):
+            theta_out[i] = pb.getJointState(self.__robot_id, th_index)[0]
 
-        print(theta_out)
+        return theta_out
     
     @property
     def T_EE(self) -> tp.List[tp.List[float]]:
-        ee_link = pb.getLinkState(self.__robot_id, pb.getNumJoints(self.__robot_id) - 1, computeForwardKinematics=True)
-        end_effector_position, end_effector_orientation = ee_link[0], ee_link[1]
+        # Get the link state (position and orientation) ...
+        ee_link = pb.getLinkState(self.__robot_id, self.__theta_index[-1], 
+                                  computeForwardKinematics=True)
 
-        print(end_effector_position, end_effector_orientation)
+        # Extract the position and orientation from the link state ...
+        p, q = ee_link[0], ee_link[1]
 
+        print(q)
+        # ...
+        R = np.array(pb.getMatrixFromQuaternion(q)).reshape((3, 3))
+
+        # ...
+        T_EE_out = HTM_Cls(None, np.float32)
+        T_EE_out[:3, :3] = R
+        T_EE_out[:3, 3]  = p
+        
+        return T_EE_out
 
     @property
     def Camera_Parameters(self) -> tp.Dict:
@@ -137,6 +174,25 @@ class Robot_Cls(object):
         if self.is_connected == True:
             pb.disconnect()
 
+    def Add_External_Object(self, urdf_file_path: str, T: HTM_Cls, enable_collision: bool):
+
+        # ...
+        p = T.p.all(); q = T.Get_Rotation('QUATERNION')
+
+        # ...
+        object_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], globalScaling=0.5, useFixedBase=True)
+
+        # ...
+        if enable_collision == False:
+            pb.setCollisionFilterGroupMask(object_id, -1, 0, 0)
+
+        self.__external_object.append(object_id)
+
+    def Remove_All_External_Objects(self):
+        # Remove the loaded URDF model
+        for _, external_obj in enumerate(self.__external_object):
+            pb.removeBody(external_obj)
+
     def Reset(self, mode: str, theta: tp.List[float] = None) -> None:
         try:
             assert mode in ['Zero', 'Home', 'Individual']
@@ -146,14 +202,12 @@ class Robot_Cls(object):
             else:
                 theta_internal = self.Theta_0 if mode == 'Zero' else self.__Robot_Parameters_Str.Theta.Home
 
-            for i, (th_i, th_i_limit, th_i_dir) in enumerate(zip(theta_internal, self.__Robot_Parameters_Str.Theta.Limit, self.__Robot_Parameters_Str.Theta.Direction)):
+            for i, (th_i, th_i_limit, th_index) in enumerate(zip(theta_internal, self.__Robot_Parameters_Str.Theta.Limit, 
+                                                                 self.__theta_index)):
 
                 if th_i_limit[0] <= th_i <= th_i_limit[1]:
-                    # Change of axis direction in individual joints.
-                    th_new = th_i * th_i_dir
-                
                     # ...
-                    pb.resetJointState(self.__robot_id, i, th_new) 
+                    pb.resetJointState(self.__robot_id, th_index, th_i) 
 
                 else:
                     print(f'[WARNING] The desired input joint {th_i} in index {i} is out of limit.')
@@ -175,20 +229,21 @@ class Robot_Cls(object):
                 theta_arr.append(theta_arr_i)
 
             for _, theta_arr_i in enumerate(np.array(theta_arr, dtype=np.float64).T):
-
-                for i, (th_i, th_i_limit, th_i_dir) in enumerate(zip(theta_arr_i, self.__Robot_Parameters_Str.Theta.Limit, self.__Robot_Parameters_Str.Theta.Direction)): 
+                for i, (th_i, th_i_limit, th_index) in enumerate(zip(theta_arr_i, self.__Robot_Parameters_Str.Theta.Limit, 
+                                                                     self.__theta_index)): 
                     if th_i_limit[0] <= th_i <= th_i_limit[1]:
-                        # Change of axis direction in individual joints.
-                        th_new = th_i * th_i_dir
-
                         # ...
-                        pb.setJointMotorControl2(self.__robot_id, i, pb.POSITION_CONTROL, targetPosition=th_new, force=100.0)
+                        pb.setJointMotorControl2(self.__robot_id, th_index, pb.POSITION_CONTROL, targetPosition=th_i, 
+                                                 force=100.0)
                     else:
                         print(f'[WARNING] The desired input joint {th_i} in index {i} is out of limit.')
                         return False
                     
-                    # ...
-                    self.Step()
+                # ...
+                self.Step()
+
+                # ...
+                time.sleep(self.__delta_time)
 
             return True
             
