@@ -147,7 +147,6 @@ class Robot_Cls(object):
         # Extract the position and orientation from the link state ...
         p, q = ee_link[0], ee_link[1]
 
-        print(q)
         # ...
         R = np.array(pb.getMatrixFromQuaternion(q)).reshape((3, 3))
 
@@ -175,7 +174,6 @@ class Robot_Cls(object):
             pb.disconnect()
 
     def Add_External_Object(self, urdf_file_path: str, T: HTM_Cls, enable_collision: bool):
-
         # ...
         p = T.p.all(); q = T.Get_Rotation('QUATERNION')
 
