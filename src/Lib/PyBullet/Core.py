@@ -54,10 +54,37 @@ Description:
 CONST_GRAVITY = 9.81
 
 class Mechanism_Cls(object):
-    def __init__(self, Mechanism_Parameters_Str: Lib.Parameters.Mechanism.Mechanism_Parameters_Str, urdf_file_path: str, properties: tp.Dict) -> None:
-        # ...
-        self.__Mechanism_Parameters_Str = Mechanism_Parameters_Str
+    """
+    Description:
+        A class for working with a mechanism object in a PyBullet scene.
 
+    Initialization of the Class:
+        Args:
+            (1) Mechanism_Parameters_Str [Mechanism_Parameters_Str(object)]: The structure of the main parameters of the mechanism.
+            (2) ...
+
+        Example:
+            Initialization:
+                # Assignment of the variables.
+                #   Example for the SMC LEFB25UNZS 1400C mechanism.
+                Mechanism_Parameters_Str = Lib.Parameters.Mechanism.SMC_LEFB25_1400_0_1_Str
+                ...
+
+                # Initialization of the class.
+                Cls = Mechanism_Cls(Mechanism_Parameters_Str, ...)
+
+            Features:
+                # Properties of the class.
+                Cls.Theta_0; Cls.T_EE
+
+                # Functions of the class.
+                Cls.Set_Absolute_Joint_Position(0.0, 100.0, 0.0, 1.0)
+    """
+        
+    def __init__(self, Mechanism_Parameters_Str: Lib.Parameters.Mechanism.Mechanism_Parameters_Str, urdf_file_path: str, properties: tp.Dict) -> None:
+        # << PRIVATE >> #
+        self.__Mechanism_Parameters_Str = Mechanism_Parameters_Str
+        self.__external_object = []
         # Time step.
         self.__delta_time = 1.0/np.float64(properties['fps'])
 
@@ -66,9 +93,6 @@ class Mechanism_Cls(object):
 
         # ...
         self.__Set_Env_Parameters(properties['Enable_GUI'], properties['Camera'])
-
-        # ...
-        self.__external_object = []
 
         # ...
         p = self.__Mechanism_Parameters_Str.T.Base.p.all(); q = self.__Mechanism_Parameters_Str.T.Base.Get_Rotation('QUATERNION')
@@ -163,9 +187,12 @@ class Mechanism_Cls(object):
         return {'Yaw': parameters[8], 'Pitch': parameters[9], 'Distance': parameters[10], 
                 'Position': parameters[11]}
     
-    @staticmethod
-    def Step() -> None:
+    def __Step(self) -> None:
+        # ..
         pb.stepSimulation()
+
+        # ..
+        time.sleep(self.__delta_time)
 
     def Disconnect(self):
         if self.is_connected == True:
@@ -194,7 +221,7 @@ class Mechanism_Cls(object):
         for _, external_obj in enumerate(self.__external_object):
             pb.removeBody(external_obj)
 
-    def Reset(self, mode: str, theta: tp.List[float] = None) -> bool:
+    def Reset(self, mode: str, theta: tp.Union[None, float] = None) -> bool:
         """
         Description:
             Function to reset the absolute position of the mechanism joint from the selected mode.
@@ -215,7 +242,7 @@ class Mechanism_Cls(object):
         """
                 
         try:
-            assert mode in ['Zero', 'Home', 'Individual']
+            assert mode in ['Zero', 'Home', 'Individual'] and isinstance(theta, float) == True
 
             if mode == 'Individual':
                 theta_internal = theta
@@ -235,10 +262,10 @@ class Mechanism_Cls(object):
             print(f'[ERROR] Information: {error}')
             if mode not in ['Zero', 'Home', 'Individual']:
                 print('[ERROR] Incorrect reset mode selected. The selected mode must be chosen from the three options (Zero, Home, Individual).')
-            if isinstance(theta, float):
+            if isinstance(theta, float) == False:
                 print('[ERROR] Incorrect value type in the input variable theta. The input variable must be of type float.')
 
-    def Set_Absolute_Joint_Position(self, theta: tp.List[float], force: float, t_0: float, t_1: float) -> bool:
+    def Set_Absolute_Joint_Position(self, theta: float, force: float, t_0: float, t_1: float) -> bool:
         """
         Description:
             Set the absolute position of the mechanism joint.
@@ -264,7 +291,7 @@ class Mechanism_Cls(object):
         """
                 
         try:
-            assert isinstance(theta, float)
+            assert isinstance(theta, float) == True
 
             # Generation of position trajectories from input parameters.
             (theta_arr, _, _) = self.__Trapezoidal_Cls.Generate(self.Theta, theta, 0.0, 0.0, 
@@ -280,10 +307,7 @@ class Mechanism_Cls(object):
                     return False
 
                 # ...
-                self.Step()
-
-                # ...
-                time.sleep(self.__delta_time)
+                self.__Step()
 
             return True
             
@@ -292,10 +316,37 @@ class Mechanism_Cls(object):
             print('[ERROR] Incorrect value type in the input variable theta. The input variable must be of type float.')
 
 class Robot_Cls(object):
-    def __init__(self, Robot_Parameters_Str: Lib.Parameters.Robot.Robot_Parameters_Str, urdf_file_path: str, properties: tp.Dict) -> None:
-        # ...
-        self.__Robot_Parameters_Str = Robot_Parameters_Str
+    """
+    Description:
+        A class for working with a robotic arm object in a PyBullet scene.
 
+    Initialization of the Class:
+        Args:
+            (1) Robot_Parameters_Str [Robot_Parameters_Str(object)]: The structure of the main parameters of the robot.
+            (2) ...
+
+        Example:
+            Initialization:
+                # Assignment of the variables.
+                #   Example for the ABB IRB 120 robot.
+                Robot_Parameters_Str = Lib.Parameters.Robot.ABB_IRB_120_Str
+                ...
+
+                # Initialization of the class.
+                Cls = Robot_Cls(Robot_Parameters_Str, ...)
+
+            Features:
+                # Properties of the class.
+                Cls.Theta_0; Cls.T_EE
+
+                # Functions of the class.
+                Cls.Set_Absolute_Joint_Position([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 100.0, 0.0, 1.0)
+    """
+        
+    def __init__(self, Robot_Parameters_Str: Lib.Parameters.Robot.Robot_Parameters_Str, urdf_file_path: str, properties: tp.Dict) -> None:
+        # << PRIVATE >> #
+        self.__Robot_Parameters_Str = Robot_Parameters_Str
+        self.__external_object = []
         # Time step.
         self.__delta_time = 1.0/np.float64(properties['fps'])
 
@@ -306,11 +357,9 @@ class Robot_Cls(object):
         self.__Set_Env_Parameters(properties['Enable_GUI'], properties['Camera'])
 
         # ...
-        self.__external_object = []
-
-        # ...
         p = self.__Robot_Parameters_Str.T.Base.p.all(); q = self.__Robot_Parameters_Str.T.Base.Get_Rotation('QUATERNION')
-        
+    
+        # ...
         if properties['External_Base'] != None:
             base_id = pb.loadURDF(properties['External_Base'], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0], 
                                  useFixedBase=True)
@@ -328,6 +377,7 @@ class Robot_Cls(object):
             # ...
             self.__robot_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], useFixedBase=True, 
                                         flags=pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES)
+        
         # ...
         self.__theta_index = []
         for i in range(pb.getNumJoints(self.__robot_id)):
@@ -416,9 +466,12 @@ class Robot_Cls(object):
         return {'Yaw': parameters[8], 'Pitch': parameters[9], 'Distance': parameters[10], 
                 'Position': parameters[11]}
     
-    @staticmethod
-    def Step() -> None:
+    def __Step(self) -> None:
+        # ..
         pb.stepSimulation()
+
+        # ..
+        time.sleep(self.__delta_time)
 
     def Disconnect(self):
         if self.is_connected == True:
@@ -447,7 +500,7 @@ class Robot_Cls(object):
         for _, external_obj in enumerate(self.__external_object):
             pb.removeBody(external_obj)
 
-    def Reset(self, mode: str, theta: tp.List[float] = None) -> bool:
+    def Reset(self, mode: str, theta: tp.Union[None, tp.List[float]] = None) -> bool:
         """
         Description:
             Function to reset the absolute position of the robot joints from the selected mode.
@@ -547,10 +600,7 @@ class Robot_Cls(object):
                         return False
 
                 # ...
-                self.Step()
-
-                # ...
-                time.sleep(self.__delta_time)
+                self.__Step()
 
             return True
             
