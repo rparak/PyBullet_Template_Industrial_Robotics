@@ -40,12 +40,19 @@ def main():
     PyBullet_Robot_Cls = Lib.PyBullet.Core.Robot_Cls(Robot_Str, f'{CONST_PROJECT_FOLDER}/URDFs/Robots/{Robot_Str.Name}/{Robot_Str.Name}.urdf', 
                                                      CONST_PYBULLET_ENV_PROPERTIES)
     
-
     # ...
     PyBullet_Robot_Cls.Reset('Home')
 
 
-    #PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', PyBullet_Robot_Cls.T_EE, False)
+    """
+    PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', PyBullet_Robot_Cls.T_EE, None, 
+                                           0.5, False)
+    """
+    
+    """
+    PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Primitives/Cube/Cube.urdf', PyBullet_Robot_Cls.T_EE, [1.0, 0.0, 1.0, 0.5], 
+                                           0.1, False)
+    """
 
     # ...
     while PyBullet_Robot_Cls.is_connected == True:

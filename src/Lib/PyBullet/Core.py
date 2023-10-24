@@ -175,12 +175,17 @@ class Robot_Cls(object):
         if self.is_connected == True:
             pb.disconnect()
 
-    def Add_External_Object(self, urdf_file_path: str, T: HTM_Cls, enable_collision: bool):
+    def Add_External_Object(self, urdf_file_path: str, T: HTM_Cls, rgba: tp.Union[None, tp.List[float]], scale: float, 
+                            enable_collision: bool):
         # ...
         p = T.p.all(); q = T.Get_Rotation('QUATERNION')
 
         # ...
-        object_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], globalScaling=0.5, useFixedBase=True)
+        object_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], globalScaling=scale, useMaximalCoordinates=False, 
+                                useFixedBase=True)
+
+        if rgba is not None:
+            pb.changeVisualShape(object_id, linkIndex=-1, rgbaColor=rgba)
 
         # ...
         if enable_collision == False:
