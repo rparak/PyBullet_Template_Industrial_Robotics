@@ -45,27 +45,11 @@ def main():
                                                      CONST_PYBULLET_ENV_PROPERTIES)
     
     # ...
-    PyBullet_Robot_Cls.Reset('Zero')
+    PyBullet_Robot_Cls.Reset('Home')
 
     # ...
-    theta = Robot_Str.Theta.Home
     while PyBullet_Robot_Cls.is_connected == True:
-        # ...
-        T = Kinematics.Forward_Kinematics(theta, 'Fast', Robot_Str)[1]
-        # ..
-        PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Primitives/Sphere/Sphere.urdf', T, [0.0, 1.0, 0.0, 0.25], 
-                                               0.025, True, False)
-        PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', T, None, 
-                                               0.5, True, False)
-            
-        in_position = PyBullet_Robot_Cls.Set_Absolute_Joint_Position(theta, 100.0, 0.0, 2.0)
-        if in_position == True:
-            # ...
-            theta = Robot_Str.Theta.Home if (theta == Robot_Str.Theta.Zero).all() else Robot_Str.Theta.Zero
-
-            # ..
-            PyBullet_Robot_Cls.Remove_All_External_Objects()
-            in_position = False
+        pass
 
     # ...
     PyBullet_Robot_Cls.Disconnect()
