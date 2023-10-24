@@ -117,14 +117,38 @@ class Mechanism_Cls(object):
     
     @property
     def Theta_0(self) -> float:
+        """
+        Description:
+            Get the zero (home) absolute position of the joint in radians/meter.
+
+        Returns:
+            (1) parameter [Vector<float>]: Zero (home) absolute joint position in radians / meters.
+        """
+                
         return self.__Mechanism_Parameters_Str.Theta.Zero
     
     @property
     def Theta(self) -> float:
+        """
+        Description:
+            Get the absolute position of the mechanism joint.
+
+        Returns:
+            (1) parameter [Vector<float>]: Current absolute joint position in radians / meters.
+        """
+                
         return pb.getJointState(self.__mechanism_id, self.__theta_index)[0]
     
     @property
     def T_EE(self) -> tp.List[tp.List[float]]:
+        """
+        Description:
+            Get the homogeneous transformation matrix of the mechanism slider.
+
+        Returns:
+            (1) parameter [Matrix<float> 4x4]: Homogeneous transformation matrix of the mechanism slider.
+        """
+               
         # Get the actual homogenous transformation matrix of the mechanism slider.
         T_Slider_new = Get_Translation_Matrix(self.__Mechanism_Parameters_Str.Theta.Axis, 
                                               self.Theta) @ self.__Mechanism_Parameters_Str.T.Slider
@@ -170,7 +194,26 @@ class Mechanism_Cls(object):
         for _, external_obj in enumerate(self.__external_object):
             pb.removeBody(external_obj)
 
-    def Reset(self, mode: str, theta: tp.List[float] = None) -> None:
+    def Reset(self, mode: str, theta: tp.List[float] = None) -> bool:
+        """
+        Description:
+            Function to reset the absolute position of the mechanism joint from the selected mode.
+
+            Note:
+                The Zero/Home modes are predefined in the mechanism structure and the Individual mode is used 
+                to set the individual position defined in the function input parameter.
+
+        Args:
+            (1) mode [string]: Possible modes to reset the absolute position of the joint.
+                                Note:
+                                    mode = 'Zero', 'Home' or 'Individual'
+            (2) theta [float]: Desired absolute joint position in radians / meters.
+
+        Returns:
+            (1) parameter [bool]: The result is 'True' if the mechanism is in the desired position,
+                                  and 'False' if it is not.
+        """
+                
         try:
             assert mode in ['Zero', 'Home', 'Individual']
 
@@ -180,7 +223,7 @@ class Mechanism_Cls(object):
                 theta_internal = self.Theta_0 if mode == 'Zero' else self.__Mechanism_Parameters_Str.Theta.Home
 
             if self.__Mechanism_Parameters_Str.Theta.Limit[0] <= theta_internal <= self.__Mechanism_Parameters_Str.Theta.Limit[1]:
-                # ...
+                # Reset the state (position) of the joint.
                 pb.resetJointState(self.__mechanism_id, self.__theta_index, theta_internal) 
             else:
                 print(f'[WARNING] The desired input joint {theta_internal} is out of limit.')
@@ -190,12 +233,36 @@ class Mechanism_Cls(object):
 
         except AssertionError as error:
             print(f'[ERROR] Information: {error}')
-            print('[ERROR] Incorrect reset mode selected. The selected mode must be chosen from the three options (Zero, Home, Individual).')
+            if mode not in ['Zero', 'Home', 'Individual']:
+                print('[ERROR] Incorrect reset mode selected. The selected mode must be chosen from the three options (Zero, Home, Individual).')
+            if isinstance(theta, float):
+                print('[ERROR] Incorrect value type in the input variable theta. The input variable must be of type float.')
 
     def Set_Absolute_Joint_Position(self, theta: tp.List[float], force: float, t_0: float, t_1: float) -> bool:
-        # targetVelocity = ...
-        # pb.VELOCITY_CONTROL
-        # https://dirkmittler.homeip.net/blend4web_ce/uranium/bullet/docs/pybullet_quickstartguide.pdf
+        """
+        Description:
+            Set the absolute position of the mechanism joint.
+
+            Note:
+                To use the velocity control of the mechanism's joint, it is necessary to change the input 
+                parameters of the 'setJointMotorControl2' function from position to:
+
+                    pb.setJointMotorControl2(self.__mechanism_id, th_index, pb.VELOCITY_CONTROL, 
+                                             targetVelocity=th_v_i, force=force),
+                                             
+                and get the velocity from trapezoidal trajectories.
+
+        Args:
+            (1) theta [float]: Desired absolute joint position in radians / meters.
+            (2) force [float]: The maximum motor force used to reach the target value.
+            (3) t_0 [float]: Animation start time in seconds.
+            (4) t_1 [float]: Animation stop time in seconds.
+
+        Returns:
+            (1) parameter [bool]: The result is 'True' if the mechanism is in the desired position,
+                                  and 'False' if it is not.
+        """
+                
         try:
             assert isinstance(theta, float)
 
@@ -205,7 +272,7 @@ class Mechanism_Cls(object):
 
             for _, theta_arr_i in enumerate(np.array(theta_arr, dtype=np.float64).T):
                 if self.__Mechanism_Parameters_Str.Theta.Limit[0] <= theta_arr_i <= self.__Mechanism_Parameters_Str.Theta.Limit[1]:
-                    # ...
+                    # Control of the mechanism's joint positions.
                     pb.setJointMotorControl2(self.__mechanism_id, self.__theta_index, pb.POSITION_CONTROL, targetPosition=theta_arr_i, 
                                              force=force)
                 else:
@@ -300,10 +367,28 @@ class Robot_Cls(object):
     
     @property
     def Theta_0(self) -> tp.List[float]:
+        """
+        Description:
+            Get the zero (home) absolute position of the joint in radians/meter.
+
+        Returns:
+            (1) parameter [Vector<float>]: Zero (home) absolute joint position in radians / meters.
+        """
+                
         return self.__Robot_Parameters_Str.Theta.Zero
     
     @property
-    def Theta(self) -> tp.List[float]:
+    def Theta(self) -> tp.List[float]: 
+        """
+        Description:
+            Get the absolute positions of the robot's joints.
+
+        Returns:
+            (1) parameter [Vector<float> 1xn]: Current absolute joint position in radians / meters.
+                                                Note:
+                                                    Where n is the number of joints.
+        """
+                
         theta_out = np.zeros(self.__Robot_Parameters_Str.Theta.Zero.size, 
                              dtype=np.float64)
         for i, th_index in enumerate(self.__theta_index):
@@ -313,6 +398,14 @@ class Robot_Cls(object):
     
     @property
     def T_EE(self) -> tp.List[tp.List[float]]:
+        """
+        Description:
+            Get the homogeneous transformation matrix of the robot end-effector.
+
+        Returns:
+            (1) parameter [Matrix<float> 4x4]: Homogeneous transformation matrix of the End-Effector.
+        """
+                
         return Kinematics.Forward_Kinematics(self.Theta, 'Fast', self.__Robot_Parameters_Str)[1]
 
     @property
@@ -354,9 +447,31 @@ class Robot_Cls(object):
         for _, external_obj in enumerate(self.__external_object):
             pb.removeBody(external_obj)
 
-    def Reset(self, mode: str, theta: tp.List[float] = None) -> None:
+    def Reset(self, mode: str, theta: tp.List[float] = None) -> bool:
+        """
+        Description:
+            Function to reset the absolute position of the robot joints from the selected mode.
+
+            Note:
+                The Zero/Home modes are predefined in the robot structure and the Individual mode is used 
+                to set the individual position defined in the function input parameter.
+
+        Args:
+            (1) mode [string]: Possible modes to reset the absolute position of the joints.
+                                Note:
+                                    mode = 'Zero', 'Home' or 'Individual'
+            (2) theta [Vector<float> 1xn]: Desired absolute joint position in radians / meters. Used only in individual 
+                                           mode.
+                                            Note:
+                                                Where n is the number of joints.
+
+        Returns:
+            (1) parameter [bool]: The result is 'True' if the robot is in the desired position,
+                                  and 'False' if it is not.
+        """
+                
         try:
-            assert mode in ['Zero', 'Home', 'Individual']
+            assert mode in ['Zero', 'Home', 'Individual'] and self.__Robot_Parameters_Str.Theta.Zero.size == theta.size
 
             if mode == 'Individual':
                 theta_internal = theta
@@ -367,7 +482,7 @@ class Robot_Cls(object):
                                                                  self.__theta_index)):
 
                 if th_i_limit[0] <= th_i <= th_i_limit[1]:
-                    # ...
+                    # Reset the state (position) of the joint.
                     pb.resetJointState(self.__robot_id, th_index, th_i) 
 
                 else:
@@ -378,12 +493,38 @@ class Robot_Cls(object):
 
         except AssertionError as error:
             print(f'[ERROR] Information: {error}')
-            print('[ERROR] Incorrect reset mode selected. The selected mode must be chosen from the three options (Zero, Home, Individual).')
+            if mode not in ['Zero', 'Home', 'Individual']:
+                print('[ERROR] Incorrect reset mode selected. The selected mode must be chosen from the three options (Zero, Home, Individual).')
+            if self.__Robot_Parameters_Str.Theta.Zero.size != theta.size:
+                print(f'[ERROR] Incorrect number of values in the input variable theta. The input variable "theta" must contain {self.__Robot_Parameters_Str.Theta.Zero.size} values.')
 
     def Set_Absolute_Joint_Position(self, theta: tp.List[float], force: float, t_0: float, t_1: float) -> bool:
-        # targetVelocity = ...
-        # pb.VELOCITY_CONTROL
-        # https://dirkmittler.homeip.net/blend4web_ce/uranium/bullet/docs/pybullet_quickstartguide.pdf
+        """
+        Description:
+            Set the absolute position of the robot joints.
+
+            Note:
+                To use the velocity control of the robot's joint, it is necessary to change the input 
+                parameters of the 'setJointMotorControl2' function from position to:
+
+                    pb.setJointMotorControl2(self.__robot_id, th_index, pb.VELOCITY_CONTROL, 
+                                             targetVelocity=th_v_i, force=force),
+
+                and get the velocity from polynomial trajectories.
+
+        Args:
+            (1) theta [Vector<float> 1xn]: Desired absolute joint position in radians / meters.
+                                            Note:
+                                                Where n is the number of joints.
+            (2) force [float]: The maximum motor force used to reach the target value.
+            (3) t_0 [float]: Animation start time in seconds.
+            (4) t_1 [float]: Animation stop time in seconds.
+
+        Returns:
+            (1) parameter [bool]: The result is 'True' if the robot is in the desired position,
+                                  and 'False' if it is not.
+        """
+                
         try:
             assert self.__Robot_Parameters_Str.Theta.Zero.size == theta.size
 
@@ -398,7 +539,7 @@ class Robot_Cls(object):
                 for i, (th_i, th_i_limit, th_index) in enumerate(zip(theta_arr_i, self.__Robot_Parameters_Str.Theta.Limit, 
                                                                      self.__theta_index)): 
                     if th_i_limit[0] <= th_i <= th_i_limit[1]:
-                        # ...
+                        # Control of the robot's joint positions.
                         pb.setJointMotorControl2(self.__robot_id, th_index, pb.POSITION_CONTROL, targetPosition=th_i, 
                                                  force=force)
                     else:
