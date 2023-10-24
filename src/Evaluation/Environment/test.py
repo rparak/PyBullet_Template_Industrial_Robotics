@@ -16,7 +16,7 @@ Description:
     Initialization of constants.
 """
 # Set the structure of the main parameters of the robot.
-CONST_ROBOT_TYPE = Parameters.ABB_IRB_120_Str
+CONST_ROBOT_TYPE = Parameters.Universal_Robots_UR3_Str
 # Locate the path to the project folder.
 CONST_PROJECT_FOLDER = os.getcwd().split('PyBullet_Template')[0] + 'PyBullet_Template'
 # ...
@@ -41,8 +41,7 @@ def main():
                                                      CONST_PYBULLET_ENV_PROPERTIES)
     
     # ...
-    PyBullet_Robot_Cls.Reset('Home')
-
+    PyBullet_Robot_Cls.Reset('Zero')
 
     """
     PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', PyBullet_Robot_Cls.T_EE, None, 
@@ -56,8 +55,8 @@ def main():
 
     # ...
     while PyBullet_Robot_Cls.is_connected == True:
-        _ = PyBullet_Robot_Cls.Set_Absolute_Joint_Position(Robot_Str.Theta.Zero, 0.0, 5.0)
-        #pass
+        #_ = PyBullet_Robot_Cls.Set_Absolute_Joint_Position(Robot_Str.Theta.Zero, 0.0, 5.0)
+        pass
 
     # ...
     PyBullet_Robot_Cls.Disconnect()

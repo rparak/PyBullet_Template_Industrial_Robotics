@@ -16,6 +16,8 @@ import Lib.Parameters.Mechanism
 import Lib.Trajectory.Utilities
 #   ../Lib/Transformation/Core
 from Lib.Transformation.Core import Homogeneous_Transformation_Matrix_Cls as HTM_Cls
+#   ../Lib/Kinematics/Core
+import Lib.Kinematics.Core as Kinematics
 
 """
 Description:
@@ -142,22 +144,7 @@ class Robot_Cls(object):
     
     @property
     def T_EE(self) -> tp.List[tp.List[float]]:
-        # Get the link state (position and orientation) ...
-        ee_link = pb.getLinkState(self.__robot_id, self.__theta_index[-1], 
-                                  computeForwardKinematics=True)
-
-        # Extract the position and orientation from the link state ...
-        p, q = ee_link[0], ee_link[1]
-
-        # ...
-        R = np.array(pb.getMatrixFromQuaternion(q)).reshape((3, 3))
-
-        # ...
-        T_EE_out = HTM_Cls(None, np.float32)
-        T_EE_out[:3, :3] = R
-        T_EE_out[:3, 3]  = p
-        
-        return T_EE_out
+        return Kinematics.Forward_Kinematics(self.Theta, 'Fast', self.__Robot_Parameters_Str)[1]
 
     @property
     def Camera_Parameters(self) -> tp.Dict:

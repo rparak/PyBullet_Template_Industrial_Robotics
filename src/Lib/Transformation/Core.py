@@ -862,7 +862,7 @@ def Get_Quaternion_From_Matrix(T: tp.List[tp.List[float]]) -> tp.List[float]:
     # Initilization of the output quaternion (q = {w, x, y, z}).
     q = Quaternion_Cls(None, T.Type)
 
-    if R[1, 1] > (-1) * R[2, 2] and R[0, 0] > (-1) * R[1, 1] and R[0, 0] > (-1) * R[2, 2]:
+    if R[1, 1] > (-1) * R[2, 2] or R[0, 0] > (-1) * R[1, 1] or R[0, 0] > (-1) * R[2, 2]:
         temp_part = (1 + R[0, 0] + R[1, 1] + R[2, 2]) ** 0.5
         q[0] = temp_part
         q[1] = (R[2, 1] - R[1, 2]) / temp_part
@@ -870,7 +870,7 @@ def Get_Quaternion_From_Matrix(T: tp.List[tp.List[float]]) -> tp.List[float]:
         q[3] = (R[1, 0] - R[0, 1]) / temp_part
         return (q * 0.5).Normalize()
 
-    if R[1, 1] < (-1) * R[2, 2] and R[0, 0] > R[1, 1] and R[0, 0] > R[2, 2]:
+    if R[1, 1] < (-1) * R[2, 2] or R[0, 0] > R[1, 1] or R[0, 0] > R[2, 2]:
         temp_part = (1 + R[0, 0] - R[1, 1] - R[2, 2]) ** 0.5
         q[0] = (R[2, 1] - R[1, 2]) / temp_part
         q[1] = temp_part
@@ -878,7 +878,7 @@ def Get_Quaternion_From_Matrix(T: tp.List[tp.List[float]]) -> tp.List[float]:
         q[3] = (R[2, 0] + R[0, 2]) / temp_part
         return (q * 0.5).Normalize()
 
-    if R[1, 1] > R[2, 2] and R[0, 0] < R[1, 1] and R[0, 0] < (-1) * R[2, 2]:
+    if R[1, 1] > R[2, 2] or R[0, 0] < R[1, 1] or R[0, 0] < (-1) * R[2, 2]:
         temp_part = (1 - R[0, 0] + R[1, 1] - R[2, 2]) ** 0.5
         q[0] = (R[0, 2] - R[2, 0]) / temp_part
         q[1] = (R[0, 1] + R[1, 0]) / temp_part
@@ -886,7 +886,7 @@ def Get_Quaternion_From_Matrix(T: tp.List[tp.List[float]]) -> tp.List[float]:
         q[3] = (R[1, 2] + R[2, 1]) / temp_part
         return (q * 0.5).Normalize()
 
-    if R[1, 1] < R[2, 2] and R[0, 0] < (-1) * R[1, 1] and R[0, 0] < R[2, 2]:
+    if R[1, 1] < R[2, 2] or R[0, 0] < (-1) * R[1, 1] or R[0, 0] < R[2, 2]:
         temp_part = (1 - R[0, 0] - R[1, 1] + R[2, 2]) ** 0.5
         q[0] = (R[1, 0] - R[0, 1]) / temp_part
         q[1] = (R[2, 0] + R[0, 2]) / temp_part
