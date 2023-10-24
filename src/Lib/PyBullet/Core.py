@@ -49,15 +49,15 @@ class Mechanism_Cls(object):
         # ...
         self.__mechanism_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], useFixedBase=True, 
                                           flags=pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES)
-        
-        """
+
         # ...
-        self.__theta_index = []
-        for i in range(pb.getNumJoints(self.__robot_id)):
-            info = pb.getJointInfo(self.__robot_id , i)
+        self.__theta_index = 0
+        for i in range(pb.getNumJoints(self.__mechanism_id)):
+            info = pb.getJointInfo(self.__mechanism_id , i)
             if info[2] in [pb.JOINT_REVOLUTE, pb.JOINT_PRISMATIC]:
-                self.__theta_index.append(i)
-        """
+                self.__theta_index = i
+                break
+
     def __Set_Env_Parameters(self, enable_gui: int, camera_properties: tp.Dict):
         # ...
         pb.connect(pb.GUI, options='--background_color_red=0.0 --background_color_green=0.0 --background_color_blue=0.0')
@@ -94,12 +94,7 @@ class Mechanism_Cls(object):
     
     @property
     def Theta(self) -> float:
-        theta_out = np.zeros(self.__Robot_Parameters_Str.Theta.Zero.size, 
-                             dtype=np.float64)
-        for i, th_index in enumerate(self.__theta_index):
-            theta_out[i] = pb.getJointState(self.__robot_id, th_index)[0]
-
-        return theta_out
+        return pb.getJointState(self.__mechanism_id, self.__theta_index)[0]
     
     @property
     def T_EE(self) -> tp.List[tp.List[float]]:
@@ -107,7 +102,7 @@ class Mechanism_Cls(object):
         T_Slider_new = Get_Translation_Matrix(self.__Mechanism_Parameters_Str.Theta.Axis, 
                                               self.Theta) @ self.__Mechanism_Parameters_Str.T.Slider
         
-        self.__Mechanism_Parameters_Str.T.Base @ T_Slider_new @ self.__Mechanism_Parameters_Str.T.Shuttle
+        return self.__Mechanism_Parameters_Str.T.Base @ T_Slider_new @ self.__Mechanism_Parameters_Str.T.Shuttle
 
     @property
     def Camera_Parameters(self) -> tp.Dict:
@@ -149,10 +144,58 @@ class Mechanism_Cls(object):
             pb.removeBody(external_obj)
 
     def Reset(self, mode: str, theta: tp.List[float] = None) -> None:
-        pass
+        try:
+            assert mode in ['Zero', 'Home', 'Individual']
+
+            if mode == 'Individual':
+                theta_internal = theta
+            else:
+                theta_internal = self.Theta_0 if mode == 'Zero' else self.__Mechanism_Parameters_Str.Theta.Home
+
+            if self.__Mechanism_Parameters_Str.Theta.Limit[0] <= theta_internal <= self.__Mechanism_Parameters_Str.Theta.Limit[1]:
+                # ...
+                pb.resetJointState(self.__mechanism_id, self.__theta_index, theta_internal) 
+            else:
+                print(f'[WARNING] The desired input joint {theta_internal} is out of limit.')
+                return False
+            
+            return True
+
+        except AssertionError as error:
+            print(f'[ERROR] Information: {error}')
+            print('[ERROR] Incorrect reset mode selected. The selected mode must be chosen from the three options (Zero, Home, Individual).')
 
     def Set_Absolute_Joint_Position(self, theta: tp.List[float], force: float, t_0: float, t_1: float) -> bool:
-        pass
+        # targetVelocity = ...
+        # pb.VELOCITY_CONTROL
+        # https://dirkmittler.homeip.net/blend4web_ce/uranium/bullet/docs/pybullet_quickstartguide.pdf
+        try:
+            assert isinstance(theta, float)
+
+            # Generation of position trajectories from input parameters.
+            (theta_arr, _, _) = self.__Trapezoidal_Cls.Generate(self.Theta, theta, 0.0, 0.0, 
+                                                                t_0, t_1)
+
+            for _, theta_arr_i in enumerate(np.array(theta_arr, dtype=np.float64).T):
+                if self.__Mechanism_Parameters_Str.Theta.Limit[0] <= theta_arr_i <= self.__Mechanism_Parameters_Str.Theta.Limit[1]:
+                    # ...
+                    pb.setJointMotorControl2(self.__mechanism_id, self.__theta_index, pb.POSITION_CONTROL, targetPosition=theta_arr_i, 
+                                             force=force)
+                else:
+                    print(f'[WARNING] The desired input joint {theta_arr_i} is out of limit.')
+                    return False
+
+                # ...
+                self.Step()
+
+                # ...
+                time.sleep(self.__delta_time)
+
+            return True
+            
+        except AssertionError as error:
+            print(f'[ERROR] Information: {error}')
+            print('[ERROR] Incorrect value type in the input variable theta. The input variable must be of type float.')
 
 class Robot_Cls(object):
     def __init__(self, Robot_Parameters_Str: Lib.Parameters.Robot.Robot_Parameters_Str, urdf_file_path: str, properties: tp.Dict) -> None:
@@ -303,6 +346,8 @@ class Robot_Cls(object):
                 else:
                     print(f'[WARNING] The desired input joint {th_i} in index {i} is out of limit.')
                     return False
+                
+            return True
 
         except AssertionError as error:
             print(f'[ERROR] Information: {error}')

@@ -38,13 +38,17 @@ def main():
                                                              CONST_PYBULLET_ENV_PROPERTIES)
     
     # ...
-    PyBullet_Mechanism_Cls.Reset('Home')
+    PyBullet_Mechanism_Cls.Reset('Zero')
 
+    """
+    PyBullet_Mechanism_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', PyBullet_Mechanism_Cls.T_EE, None, 
+                                               0.5, True, False)
 
+    """
     # ...
     while PyBullet_Mechanism_Cls.is_connected == True:
-        #_ = PyBullet_Mechanism_Cls.Set_Absolute_Joint_Position(Mechanism_Str.Theta.Zero, 100.0, 0.0, 5.0)
-        pass
+        _ = PyBullet_Mechanism_Cls.Set_Absolute_Joint_Position(Mechanism_Str.Theta.Home, 100.0, 0.0, 5.0)
+        #pass
 
     # ...
     PyBullet_Mechanism_Cls.Disconnect()
