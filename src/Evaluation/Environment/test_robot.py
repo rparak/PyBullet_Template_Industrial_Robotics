@@ -5,11 +5,15 @@ if '../' + 'src' not in sys.path:
     sys.path.append('../..')
 # OS (Operating system interfaces)
 import os
+# Numpy (Array computing) [pip3 install numpy]
+import numpy as np
 # Custom Lib.:
 #   ../Lib/Parameters/Robot
 import Lib.Parameters.Robot as Parameters
 #   ../Lib/PyBullet.Core
 import Lib.PyBullet.Core
+#   ...
+import Lib.Kinematics.Core as Kinematics
 
 """
 Description:
@@ -54,9 +58,24 @@ def main():
     """
     
     # ...
+    theta = Robot_Str.Theta.Zero
     while PyBullet_Robot_Cls.is_connected == True:
-        _ = PyBullet_Robot_Cls.Set_Absolute_Joint_Position(Robot_Str.Theta.Zero, 100.0, 0.0, 5.0)
-        pass
+        # ...
+        T = Kinematics.Forward_Kinematics(theta, 'Fast', Robot_Str)[1]
+        # ..
+        PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Primitives/Sphere/Sphere.urdf', T, [0.0, 1.0, 0.0, 0.25], 
+                                               0.025, True, False)
+        PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', T, None, 
+                                               0.5, True, False)
+            
+        in_position = PyBullet_Robot_Cls.Set_Absolute_Joint_Position(theta, 100.0, 0.0, 5.0)
+        if in_position == True:
+            # ...
+            theta = Robot_Str.Theta.Home if (theta == Robot_Str.Theta.Zero).all() else Robot_Str.Theta.Zero
+
+            # ..
+            PyBullet_Robot_Cls.Remove_All_External_Objects()
+            in_position = False
 
     # ...
     PyBullet_Robot_Cls.Disconnect()
