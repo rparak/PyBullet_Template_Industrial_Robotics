@@ -43,10 +43,8 @@ def main():
     # ...
     PyBullet_Robot_Cls.Reset('Zero')
 
-    """
     PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', PyBullet_Robot_Cls.T_EE, None, 
                                            0.5, False)
-    """
     
     """
     PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Primitives/Cube/Cube.urdf', PyBullet_Robot_Cls.T_EE, [1.0, 0.0, 1.0, 0.5], 
