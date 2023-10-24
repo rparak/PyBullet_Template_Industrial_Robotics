@@ -57,7 +57,7 @@
     <axis xyz="0 1 0"/>
     <limit effort="0.0" lower="0.0" upper="0.0" velocity="0.0"/>
   </joint>
-  <link name="link_Shuttle">
+  <link name="link_shuttle">
     <visual>
       <geometry>
         <mesh filename="/Mesh/Visual/Shuttle.stl"/>
