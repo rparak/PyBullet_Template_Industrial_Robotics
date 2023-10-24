@@ -56,7 +56,6 @@ def main():
         PyBullet_Mechanism_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', T, None, 
                                                0.5, True, False)
     
-            
         in_position = PyBullet_Mechanism_Cls.Set_Absolute_Joint_Position(theta, 100.0, 0.0, 2.0)
         if in_position == True:
             # ...
