@@ -107,17 +107,17 @@ class Mechanism_Cls(object):
         # Initialization of the class to generate trajectory.
         self.__Trapezoidal_Cls = Lib.Trajectory.Utilities.Trapezoidal_Profile_Cls(delta_time=self.__delta_time)
 
-        # ...
+        # Set the parameters of the PyBullet environment.
         self.__Set_Env_Parameters(properties['Enable_GUI'], properties['Camera'])
 
-        # ...
+        # Get the translational and rotational part from the transformation matrix.
         p = self.__Mechanism_Parameters_Str.T.Base.p.all(); q = self.__Mechanism_Parameters_Str.T.Base.Get_Rotation('QUATERNION')
 
-        # ...
+        # Load a physics model of the mechanism structure.
         self.__mechanism_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], useFixedBase=True, 
                                           flags=pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES)
 
-        # ...
+        # Obtain the index of the movable part of the mechanism structure.
         self.__theta_index = 0
         for i in range(pb.getNumJoints(self.__mechanism_id)):
             info = pb.getJointInfo(self.__mechanism_id , i)
@@ -125,7 +125,24 @@ class Mechanism_Cls(object):
                 self.__theta_index = i
                 break
 
-    def __Set_Env_Parameters(self, enable_gui: int, camera_properties: tp.Dict):
+    def __Set_Env_Parameters(self, enable_gui: int, camera_parameters: tp.Dict) -> None:
+        """
+        Description:
+            A function to set the parameters of the PyBullet environment.
+
+        Args:
+            (1) enable_gui [int]: Enable/disable the PyBullet explorer view.
+            (2) camera_parameters [Dictionary {'Yaw': float, 'Pitch': float, 'Distance': float, 
+                                               'Position': Vector<float> 1x3}]: The parameters of the camera.
+                                                                                    Note:
+                                                                                        'Yaw': Yaw angle of the camera.
+                                                                                        'Pitch': Pitch angle of the camera.
+                                                                                        'Distance': Distance between the camera 
+                                                                                                    and the camera target.
+                                                                                        'Position': Camera position in Cartesian 
+                                                                                                    world space coordinates. 
+        """
+
         # ...
         pb.connect(pb.GUI, options='--background_color_red=0.0 --background_color_green=0.0 --background_color_blue=0.0')
         pb.setTimeStep(self.__delta_time)
@@ -135,8 +152,8 @@ class Mechanism_Cls(object):
         pb.setGravity(0.0, 0.0, -CONST_GRAVITY)
 
         # ...
-        pb.resetDebugVisualizerCamera(cameraYaw=camera_properties['Yaw'], cameraPitch=camera_properties['Pitch'], cameraDistance=camera_properties['Distance'], 
-                                      cameraTargetPosition=camera_properties['Position'])
+        pb.resetDebugVisualizerCamera(cameraYaw=camera_parameters['Yaw'], cameraPitch=camera_parameters['Pitch'], cameraDistance=camera_parameters['Distance'], 
+                                      cameraTargetPosition=camera_parameters['Position'])
         
         # ...
         pb.configureDebugVisualizer(pb.COV_ENABLE_RENDERING, 1)
@@ -146,8 +163,7 @@ class Mechanism_Cls(object):
 
         # ...
         plane_id = pb.loadURDF('/../../../URDFs/Primitives/Plane/Plane.urdf', globalScaling=0.20, useMaximalCoordinates=True, useFixedBase=True)
-
-        # ...
+        #   ...
         pb.changeVisualShape(plane_id, -1, textureUniqueId=pb.loadTexture('/../../../Textures/Plane.png'))
         pb.changeVisualShape(plane_id, -1, rgbaColor=[0.55, 0.55, 0.55, 0.95])
 
@@ -241,7 +257,7 @@ class Mechanism_Cls(object):
         # The time to approximate and update the state of the dynamic system.
         time.sleep(self.__delta_time)
 
-    def Disconnect(self):
+    def Disconnect(self) -> None:
         """
         Description:
             A function to disconnect the created environment from a physical server.
@@ -250,25 +266,43 @@ class Mechanism_Cls(object):
         if self.is_connected == True:
             pb.disconnect()
 
-    def Add_External_Object(self, urdf_file_path: str, T: HTM_Cls, rgba: tp.Union[None, tp.List[float]], scale: float, 
-                            fixed: bool, enable_collision: bool):
-        # ...
+    def Add_External_Object(self, urdf_file_path: str, T: HTM_Cls, color: tp.Union[None, tp.List[float]], scale: float, 
+                            fixed_position: bool, enable_collision: bool) -> None:
+        """
+        Description:
+            A function to add external objects with the *.urdf extension to the PyBullet environment.
+
+        Args:
+            (1) urdf_file_path [string]: The specified path of the object file with the extension '*.urdf'.
+            (2) T [Matrix<float> 4x4]: Homogeneous transformation matrix of the object.
+            (3) color [Vector<float> 1x4]: The color of the object.
+                                            Note:
+                                                Format: rgba(red, green, blue, alpha)
+            (4) scale [float]: The scale factor of the object.
+            (5) fixed_position [bool]: Information about whether the position of the object should 
+                                       be fixed (static) or dynamic.
+            (6) enable_collision [bool]: Information on whether or not the object is to be exposed 
+                                         to collisions
+        """
+
+        # Get the translational and rotational part from the transformation matrix.
         p = T.p.all(); q = T.Get_Rotation('QUATERNION')
 
-        # ...
+        # Load a physics model of the object.
         object_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], globalScaling=scale, useMaximalCoordinates=False, 
-                                useFixedBase=fixed)
+                                useFixedBase=fixed_position)
+        #   Store the object ID to the list.
+        self.__external_object.append(object_id)
 
-        if rgba is not None:
-            pb.changeVisualShape(object_id, linkIndex=-1, rgbaColor=rgba)
-
-        # ...
+        # Set the properties of the added object.
+        #   Color.
+        if color is not None:
+            pb.changeVisualShape(object_id, linkIndex=-1, rgbaColor=color)
+        #   Collision.
         if enable_collision == False:
             pb.setCollisionFilterGroupMask(object_id, -1, 0, 0)
 
-        self.__external_object.append(object_id)
-
-    def Remove_All_External_Objects(self):
+    def Remove_All_External_Objects(self) -> None:
         """
         Description:
             A function to remove all models with the *.urdf extension from the PyBullet environment 
@@ -456,14 +490,14 @@ class Robot_Cls(object):
             self.__robot_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], useFixedBase=True, 
                                         flags=pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES)
         
-        # ...
+        # Obtain the indices of the movable parts of the robotic structure.
         self.__theta_index = []
         for i in range(pb.getNumJoints(self.__robot_id)):
             info = pb.getJointInfo(self.__robot_id , i)
             if info[2] in [pb.JOINT_REVOLUTE, pb.JOINT_PRISMATIC]:
                 self.__theta_index.append(i)
 
-    def __Set_Env_Parameters(self, enable_gui: int, camera_properties: tp.Dict):
+    def __Set_Env_Parameters(self, enable_gui: int, camera_properties: tp.Dict) -> None:
         # ...
         pb.connect(pb.GUI, options='--background_color_red=0.0 --background_color_green=0.0 --background_color_blue=0.0')
         pb.setTimeStep(self.__delta_time)
@@ -582,7 +616,7 @@ class Robot_Cls(object):
         # The time to approximate and update the state of the dynamic system.
         time.sleep(self.__delta_time)
 
-    def Disconnect(self):
+    def Disconnect(self) -> None:
         """
         Description:
             A function to disconnect the created environment from a physical server.
@@ -591,25 +625,43 @@ class Robot_Cls(object):
         if self.is_connected == True:
             pb.disconnect()
 
-    def Add_External_Object(self, urdf_file_path: str, T: HTM_Cls, rgba: tp.Union[None, tp.List[float]], scale: float, 
-                            fixed: bool, enable_collision: bool):
-        # ...
+    def Add_External_Object(self, urdf_file_path: str, T: HTM_Cls, color: tp.Union[None, tp.List[float]], scale: float, 
+                            fixed_position: bool, enable_collision: bool) -> None:
+        """
+        Description:
+            A function to add external objects with the *.urdf extension to the PyBullet environment.
+
+        Args:
+            (1) urdf_file_path [string]: The specified path of the object file with the extension '*.urdf'.
+            (2) T [Matrix<float> 4x4]: Homogeneous transformation matrix of the object.
+            (3) color [Vector<float> 1x4]: The color of the object.
+                                            Note:
+                                                Format: rgba(red, green, blue, alpha)
+            (4) scale [float]: The scale factor of the object.
+            (5) fixed_position [bool]: Information about whether the position of the object should 
+                                       be fixed (static) or dynamic.
+            (6) enable_collision [bool]: Information on whether or not the object is to be exposed 
+                                         to collisions
+        """
+
+        # Get the translational and rotational part from the transformation matrix.
         p = T.p.all(); q = T.Get_Rotation('QUATERNION')
 
-        # ...
+        # Load a physics model of the object.
         object_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], globalScaling=scale, useMaximalCoordinates=False, 
-                                useFixedBase=fixed)
+                                useFixedBase=fixed_position)
+        #   Store the object ID to the list.
+        self.__external_object.append(object_id)
 
-        if rgba is not None:
-            pb.changeVisualShape(object_id, linkIndex=-1, rgbaColor=rgba)
-
-        # ...
+        # Set the properties of the added object.
+        #   Color.
+        if color is not None:
+            pb.changeVisualShape(object_id, linkIndex=-1, rgbaColor=color)
+        #   Collision.
         if enable_collision == False:
             pb.setCollisionFilterGroupMask(object_id, -1, 0, 0)
 
-        self.__external_object.append(object_id)
-
-    def Remove_All_External_Objects(self):
+    def Remove_All_External_Objects(self) -> None:
         """
         Description:
             A function to remove all models with the *.urdf extension from the PyBullet environment 
