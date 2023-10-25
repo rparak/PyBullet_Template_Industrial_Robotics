@@ -8,7 +8,7 @@ import os
 # Custom Lib.:
 #   ../Lib/Parameters/Mechanism
 import Lib.Parameters.Mechanism as Parameters
-#   ../Lib/PyBullet.Core
+#   ../Lib/PyBullet/Core
 import Lib.PyBullet.Core
 #   ../Lib/Transformation/Core
 from Lib.Transformation.Core import Get_Translation_Matrix

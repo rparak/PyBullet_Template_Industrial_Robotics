@@ -39,9 +39,21 @@ def main():
     PyBullet_Mechanism_Cls = Lib.PyBullet.Core.Mechanism_Cls(Mechanism_Str, f'{CONST_PROJECT_FOLDER}/URDFs/Mechanisms/{Mechanism_Str.Name}/{Mechanism_Str.Name}.urdf', 
                                                              CONST_PYBULLET_ENV_PROPERTIES)
     
-    # ...
-    PyBullet_Mechanism_Cls.Reset('Home')
+    # ..
+    theta = Mechanism_Str.Theta.Home
 
+    # ...
+    PyBullet_Mechanism_Cls.Reset('Individual', theta)
+
+    # Get the actual homogenous transformation matrix of the mechanism slider.
+    T_Slider_new = Get_Translation_Matrix(Mechanism_Str.Theta.Axis, 
+                                          theta) @ Mechanism_Str.T.Slider
+    T = Mechanism_Str.T.Base @ T_Slider_new @ Mechanism_Str.T.Shuttle
+
+    # ...
+    PyBullet_Mechanism_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', T, None, 
+                                               0.5, True, False)
+    
     # ...
     while PyBullet_Mechanism_Cls.is_connected == True:
         pass

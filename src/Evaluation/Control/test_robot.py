@@ -5,14 +5,12 @@ if '../' + 'src' not in sys.path:
     sys.path.append('../..')
 # OS (Operating system interfaces)
 import os
-# Numpy (Array computing) [pip3 install numpy]
-import numpy as np
 # Custom Lib.:
 #   ../Lib/Parameters/Robot
 import Lib.Parameters.Robot as Parameters
-#   ../Lib/PyBullet.Core
+#   ../Lib/PyBullet/Core
 import Lib.PyBullet.Core
-#   ...
+#   ../Lib/Kinematics/Core
 import Lib.Kinematics.Core as Kinematics
 
 """

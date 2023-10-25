@@ -5,14 +5,12 @@ if '../' + 'src' not in sys.path:
     sys.path.append('../..')
 # OS (Operating system interfaces)
 import os
-# Numpy (Array computing) [pip3 install numpy]
-import numpy as np
 # Custom Lib.:
 #   ../Lib/Parameters/Robot
 import Lib.Parameters.Robot as Parameters
-#   ../Lib/PyBullet.Core
+#   ../Lib/PyBullet/Core
 import Lib.PyBullet.Core
-#   ...
+#   ../Lib/Kinematics/Core
 import Lib.Kinematics.Core as Kinematics
 
 """
@@ -44,9 +42,19 @@ def main():
     PyBullet_Robot_Cls = Lib.PyBullet.Core.Robot_Cls(Robot_Str, f'{CONST_PROJECT_FOLDER}/URDFs/Robots/{Robot_Str.Name}/{Robot_Str.Name}.urdf', 
                                                      CONST_PYBULLET_ENV_PROPERTIES)
     
-    # ...
-    PyBullet_Robot_Cls.Reset('Home')
+    # ..
+    theta = Robot_Str.Theta.Home
 
+    # ...
+    PyBullet_Robot_Cls.Reset('Individual', theta)
+
+    # ...
+    T = Kinematics.Forward_Kinematics(theta, 'Fast', Robot_Str)[1]
+    
+    # ...
+    PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', T, None, 
+                                            0.5, True, False)
+    
     # ...
     while PyBullet_Robot_Cls.is_connected == True:
         pass
