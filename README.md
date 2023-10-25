@@ -29,13 +29,13 @@ Roman.Parak@outlook.com
 
 ## Citation (BibTex)
 ```bash
-@misc{RomanParak_DataConverter,
+@misc{RomanParak_PyBulletTemplate,
   author = {Roman Parak},
-  title = {An open-source transformation library useful for robotics applications},
+  title = {PyBullet template for industrial robotics},
   year = {2023},
   publisher = {GitHub},
   journal = {GitHub repository},
-  howpublished = {\url{https://https://github.com/rparak/Transformation}}
+  howpublished = {\url{https://https://github.com/rparak/PyBullet_Template}}
 }
 ```
 
