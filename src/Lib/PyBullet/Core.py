@@ -56,7 +56,7 @@ CONST_GRAVITY = 9.81
 class Mechanism_Cls(object):
     """
     Description:
-        A class for working with a mechanism object in a PyBullet scene.
+        A class for working with a mechanism object in a PyBullet environment.
 
     Initialization of the Class:
         Args:
@@ -143,7 +143,7 @@ class Mechanism_Cls(object):
                                                                                                     world space coordinates. 
         """
 
-        # ...
+        # Connect to the physics simulation and create an environment with additional properties.
         pb.connect(pb.GUI, options='--background_color_red=0.0 --background_color_green=0.0 --background_color_blue=0.0')
         pb.setTimeStep(self.__delta_time)
         pb.setRealTimeSimulation(0)
@@ -151,19 +151,19 @@ class Mechanism_Cls(object):
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())
         pb.setGravity(0.0, 0.0, -CONST_GRAVITY)
 
-        # ...
+        # Set the parameters of the camera.
         pb.resetDebugVisualizerCamera(cameraYaw=camera_parameters['Yaw'], cameraPitch=camera_parameters['Pitch'], cameraDistance=camera_parameters['Distance'], 
                                       cameraTargetPosition=camera_parameters['Position'])
         
-        # ...
+        # Configure settings for the built-in OpenGL visualizer.
         pb.configureDebugVisualizer(pb.COV_ENABLE_RENDERING, 1)
         pb.configureDebugVisualizer(pb.COV_ENABLE_SHADOWS, 1)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, enable_gui)
         pb.configureDebugVisualizer(pb.COV_ENABLE_MOUSE_PICKING, 0)
 
-        # ...
+        # Load a physics model of the plane.
         plane_id = pb.loadURDF('/../../../URDFs/Primitives/Plane/Plane.urdf', globalScaling=0.20, useMaximalCoordinates=True, useFixedBase=True)
-        #   ...
+        #   Change the texture of the loaded object.
         pb.changeVisualShape(plane_id, -1, textureUniqueId=pb.loadTexture('/../../../Textures/Plane.png'))
         pb.changeVisualShape(plane_id, -1, rgbaColor=[0.55, 0.55, 0.55, 0.95])
 
@@ -411,7 +411,7 @@ class Mechanism_Cls(object):
 class Robot_Cls(object):
     """
     Description:
-        A class for working with a robotic arm object in a PyBullet scene.
+        A class for working with a robotic arm object in a PyBullet environment.
 
     Initialization of the Class:
         Args:
@@ -454,7 +454,7 @@ class Robot_Cls(object):
                 # Functions of the class.
                 Cls.Set_Absolute_Joint_Position([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 100.0, 0.0, 1.0)
     """
-        
+
     def __init__(self, Robot_Parameters_Str: Lib.Parameters.Robot.Robot_Parameters_Str, urdf_file_path: str, properties: tp.Dict) -> None:
         # << PRIVATE >> #
         self.__Robot_Parameters_Str = Robot_Parameters_Str
@@ -465,28 +465,28 @@ class Robot_Cls(object):
         # Initialization of the class to generate trajectory.
         self.__Polynomial_Cls = Lib.Trajectory.Utilities.Polynomial_Profile_Cls(delta_time=self.__delta_time)
 
-        # ...
+        # Set the parameters of the PyBullet environment.
         self.__Set_Env_Parameters(properties['Enable_GUI'], properties['Camera'])
 
-        # ...
+        # Get the translational and rotational part from the transformation matrix.
         p = self.__Robot_Parameters_Str.T.Base.p.all(); q = self.__Robot_Parameters_Str.T.Base.Get_Rotation('QUATERNION')
     
-        # ...
         if properties['External_Base'] != None:
+            # Load a physics model of the robotic structure base.
             base_id = pb.loadURDF(properties['External_Base'], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 1.0], 
                                  useFixedBase=True)
             
-            # disable all collisions with the base_id
+            # Disable all collisions of the object
             pb.setCollisionFilterGroupMask(base_id, -1, 0, 0)
 
-            # ...
+            # Load a physics model of the robotic structure.
             self.__robot_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], useFixedBase=True, 
                                         flags=pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES)
             
-            # ...
+            # Enable collision detection between specific pairs of links.
             pb.setCollisionFilterPair(self.__robot_id, base_id, -1,-1, 1)
         else:
-            # ...
+            # Load a physics model of the robotic structure.
             self.__robot_id = pb.loadURDF(urdf_file_path, p, [q.x, q.y, q.z, q.w], useFixedBase=True, 
                                         flags=pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES)
         
@@ -497,8 +497,25 @@ class Robot_Cls(object):
             if info[2] in [pb.JOINT_REVOLUTE, pb.JOINT_PRISMATIC]:
                 self.__theta_index.append(i)
 
-    def __Set_Env_Parameters(self, enable_gui: int, camera_properties: tp.Dict) -> None:
-        # ...
+    def __Set_Env_Parameters(self, enable_gui: int, camera_parameters: tp.Dict) -> None:
+        """
+        Description:
+            A function to set the parameters of the PyBullet environment.
+
+        Args:
+            (1) enable_gui [int]: Enable/disable the PyBullet explorer view.
+            (2) camera_parameters [Dictionary {'Yaw': float, 'Pitch': float, 'Distance': float, 
+                                               'Position': Vector<float> 1x3}]: The parameters of the camera.
+                                                                                    Note:
+                                                                                        'Yaw': Yaw angle of the camera.
+                                                                                        'Pitch': Pitch angle of the camera.
+                                                                                        'Distance': Distance between the camera 
+                                                                                                    and the camera target.
+                                                                                        'Position': Camera position in Cartesian 
+                                                                                                    world space coordinates. 
+        """
+
+        # Connect to the physics simulation and create an environment with additional properties.
         pb.connect(pb.GUI, options='--background_color_red=0.0 --background_color_green=0.0 --background_color_blue=0.0')
         pb.setTimeStep(self.__delta_time)
         pb.setRealTimeSimulation(0)
@@ -506,20 +523,19 @@ class Robot_Cls(object):
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())
         pb.setGravity(0.0, 0.0, -CONST_GRAVITY)
 
-        # ...
-        pb.resetDebugVisualizerCamera(cameraYaw=camera_properties['Yaw'], cameraPitch=camera_properties['Pitch'], cameraDistance=camera_properties['Distance'], 
-                                      cameraTargetPosition=camera_properties['Position'])
+        # Set the parameters of the camera.
+        pb.resetDebugVisualizerCamera(cameraYaw=camera_parameters['Yaw'], cameraPitch=camera_parameters['Pitch'], cameraDistance=camera_parameters['Distance'], 
+                                      cameraTargetPosition=camera_parameters['Position'])
         
-        # ...
+        # Configure settings for the built-in OpenGL visualizer.
         pb.configureDebugVisualizer(pb.COV_ENABLE_RENDERING, 1)
         pb.configureDebugVisualizer(pb.COV_ENABLE_SHADOWS, 1)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, enable_gui)
         pb.configureDebugVisualizer(pb.COV_ENABLE_MOUSE_PICKING, 0)
 
-        # ...
+        # Load a physics model of the plane.
         plane_id = pb.loadURDF('/../../../URDFs/Primitives/Plane/Plane.urdf', globalScaling=0.20, useMaximalCoordinates=True, useFixedBase=True)
-
-        # ...
+        #   Change the texture of the loaded object.
         pb.changeVisualShape(plane_id, -1, textureUniqueId=pb.loadTexture('/../../../Textures/Plane.png'))
         pb.changeVisualShape(plane_id, -1, rgbaColor=[0.55, 0.55, 0.55, 0.95])
 
