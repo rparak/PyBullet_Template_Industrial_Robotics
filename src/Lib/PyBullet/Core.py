@@ -61,17 +61,33 @@ class Mechanism_Cls(object):
     Initialization of the Class:
         Args:
             (1) Mechanism_Parameters_Str [Mechanism_Parameters_Str(object)]: The structure of the main parameters of the mechanism.
-            (2) ...
+            (2) urdf_file_path [string]: The specified path of the mechanism structure file with an extension '*.urdf'.
+                                            Note:
+                                                urdf: Unified Robotics Description Format
+            (3) properties [Dictionary {'Enable_GUI': int, 'fps': int, 
+                                        'Camera': {'Yaw': float, 
+                                                   'Pitch': float, 
+                                                   'Distance': float, 
+                                                   'Position': Vector<float> 1x3}}]: The properties of the PyBullet environment.
+                                                                                        Note:
+                                                                                            'Enable_GUI': Enable/disable the PyBullet explorer view.
+                                                                                            'fps': The FPS (Frames Per Seconds) value.
+                                                                                            'Camera': Camera parameters. For more information, please see 
+                                                                                                      the 'Get_Camera_Parameters' function of the class.
 
         Example:
             Initialization:
                 # Assignment of the variables.
                 #   Example for the SMC LEFB25UNZS 1400C mechanism.
                 Mechanism_Parameters_Str = Lib.Parameters.Mechanism.SMC_LEFB25_1400_0_1_Str
-                ...
+                #   The properties of the PyBullet environment.
+                env_properties = {'Enable_GUI': 0, 'fps': 100, 
+                                  'Camera': {'Yaw': 70.0, 'Pitch': -32.0, 'Distance':1.3, 
+                                             'Position': [0.05, -0.10, 0.06]}}
 
                 # Initialization of the class.
-                Cls = Mechanism_Cls(Mechanism_Parameters_Str, ...)
+                Cls = Mechanism_Cls(Mechanism_Parameters_Str, f'../Mechanisms/{Mechanism_Parameters_Str.Name}/{Mechanism_Parameters_Str.Name}.urdf',
+                                    env_properties)
 
             Features:
                 # Properties of the class.
@@ -137,6 +153,14 @@ class Mechanism_Cls(object):
 
     @property
     def is_connected(self) -> bool:
+        """
+        Description:
+            Information about a successful connection to the physical server.
+
+        Returns:
+            (1) parameter [bool]: The result is 'True' if it is connected, 'False' if it is not.
+        """
+                
         return pb.isConnected()
     
     @property
@@ -180,21 +204,49 @@ class Mechanism_Cls(object):
         return self.__Mechanism_Parameters_Str.T.Base @ T_Slider_new @ self.__Mechanism_Parameters_Str.T.Shuttle
 
     @property
-    def Camera_Parameters(self) -> tp.Dict:
-        # ...
+    def Get_Camera_Parameters(self) -> tp.Dict:
+        """
+        Description:
+            Obtain the camera's parameters.
+
+            Note:
+                The obtained parameters can be used as one of the input properties of the class.
+
+        Returns:
+            (1) parameter [Dictionary {'Yaw': float, 'Pitch': float, 'Distance': float, 
+                                       'Position': Vector<float> 1x3}]: The parameters of the camera.
+                                                                            Note:
+                                                                                'Yaw': Yaw angle of the camera.
+                                                                                'Pitch': Pitch angle of the camera.
+                                                                                'Distance': Distance between the camera 
+                                                                                            and the camera target.
+                                                                                'Position': Camera position in Cartesian 
+                                                                                            world space coordinates.
+        """
+
         parameters = pb.getDebugVisualizerCamera()
 
         return {'Yaw': parameters[8], 'Pitch': parameters[9], 'Distance': parameters[10], 
                 'Position': parameters[11]}
     
     def __Step(self) -> None:
-        # ..
+        """
+        Description:
+            A function to perform all the actions in a single forward dynamics 
+            simulation step extended with a time step value.
+        """
+
         pb.stepSimulation()
 
-        # ..
+        # The time to approximate and update the state of the dynamic system.
         time.sleep(self.__delta_time)
 
     def Disconnect(self):
+        """
+        Description:
+            A function to disconnect the created environment from a physical server.
+        """
+
         if self.is_connected == True:
             pb.disconnect()
 
@@ -217,7 +269,12 @@ class Mechanism_Cls(object):
         self.__external_object.append(object_id)
 
     def Remove_All_External_Objects(self):
-        # Remove the loaded URDF model
+        """
+        Description:
+            A function to remove all models with the *.urdf extension from the PyBullet environment 
+            that were added using the 'Add_External_Object' function of the class.
+        """
+
         for _, external_obj in enumerate(self.__external_object):
             pb.removeBody(external_obj)
 
@@ -242,9 +299,11 @@ class Mechanism_Cls(object):
         """
                 
         try:
-            assert mode in ['Zero', 'Home', 'Individual'] and isinstance(theta, float) == True
+            assert mode in ['Zero', 'Home', 'Individual']
 
             if mode == 'Individual':
+                assert isinstance(theta, float) == True
+
                 theta_internal = theta
             else:
                 theta_internal = self.Theta_0 if mode == 'Zero' else self.__Mechanism_Parameters_Str.Theta.Home
@@ -306,7 +365,7 @@ class Mechanism_Cls(object):
                     print(f'[WARNING] The desired input joint {theta_arr_i} is out of limit.')
                     return False
 
-                # ...
+                # Update the state of the dynamic system.
                 self.__Step()
 
             return True
@@ -323,17 +382,36 @@ class Robot_Cls(object):
     Initialization of the Class:
         Args:
             (1) Robot_Parameters_Str [Robot_Parameters_Str(object)]: The structure of the main parameters of the robot.
-            (2) ...
+            (2) urdf_file_path [string]: The specified path of the robotic structure file with an extension '*.urdf'.
+                                            Note:
+                                                urdf - Unified Robotics Description Format
+            (3) properties [Dictionary {'Enable_GUI': int, 'fps': int, 'External_Base': None or string,
+                                        'Camera': {'Yaw': float, 
+                                                   'Pitch': float, 
+                                                   'Distance': float, 
+                                                   'Position': Vector<float> 1x3}}]: The properties of the PyBullet environment.
+                                                                                        Note:
+                                                                                            'Enable_GUI': Enable/disable the PyBullet explorer view.
+                                                                                            'fps': The FPS (Frames Per Seconds) value.
+                                                                                            'External_Base: The specified path of the robotic structure 
+                                                                                                            base, if it exists. If not, set the value 
+                                                                                                            to "None".
+                                                                                            'Camera': Camera parameters. For more information, please see 
+                                                                                                      the 'Get_Camera_Parameters' function of the class.
 
         Example:
             Initialization:
                 # Assignment of the variables.
                 #   Example for the ABB IRB 120 robot.
                 Robot_Parameters_Str = Lib.Parameters.Robot.ABB_IRB_120_Str
-                ...
+                #   The properties of the PyBullet environment.
+                env_properties = {'Enable_GUI': 0, 'fps': 100, 'External_Base': None,
+                                  'Camera': {'Yaw': 70.0, 'Pitch': -32.0, 'Distance':1.3, 
+                                             'Position': [0.05, -0.10, 0.06]}}
 
                 # Initialization of the class.
-                Cls = Robot_Cls(Robot_Parameters_Str, ...)
+                Cls = Robot_Cls(Robot_Parameters_Str, f'../Robots/{Robot_Parameters_Str.Name}/{Robot_Parameters_Str.Name}.urdf',
+                                env_properties)
 
             Features:
                 # Properties of the class.
@@ -413,6 +491,14 @@ class Robot_Cls(object):
 
     @property
     def is_connected(self) -> bool:
+        """
+        Description:
+            Information about a successful connection to the physical server.
+
+        Returns:
+            (1) parameter [bool]: The result is 'True' if it is connected, 'False' if it is not.
+        """
+
         return pb.isConnected()
     
     @property
@@ -459,21 +545,49 @@ class Robot_Cls(object):
         return Kinematics.Forward_Kinematics(self.Theta, 'Fast', self.__Robot_Parameters_Str)[1]
 
     @property
-    def Camera_Parameters(self) -> tp.Dict:
-        # ...
+    def Get_Camera_Parameters(self) -> tp.Dict:
+        """
+        Description:
+            Obtain the camera's parameters.
+
+            Note:
+                The obtained parameters can be used as one of the input properties of the class.
+
+        Returns:
+            (1) parameter [Dictionary {'Yaw': float, 'Pitch': float, 'Distance': float, 
+                                       'Position': Vector<float> 1x3}]: The parameters of the camera.
+                                                                            Note:
+                                                                                'Yaw': Yaw angle of the camera.
+                                                                                'Pitch': Pitch angle of the camera.
+                                                                                'Distance': Distance between the camera 
+                                                                                            and the camera target.
+                                                                                'Position': Camera position in Cartesian 
+                                                                                            world space coordinates.
+        """
+
         parameters = pb.getDebugVisualizerCamera()
 
         return {'Yaw': parameters[8], 'Pitch': parameters[9], 'Distance': parameters[10], 
                 'Position': parameters[11]}
     
     def __Step(self) -> None:
-        # ..
+        """
+        Description:
+            A function to perform all the actions in a single forward dynamics 
+            simulation step extended with a time step value.
+        """
+
         pb.stepSimulation()
 
-        # ..
+        # The time to approximate and update the state of the dynamic system.
         time.sleep(self.__delta_time)
 
     def Disconnect(self):
+        """
+        Description:
+            A function to disconnect the created environment from a physical server.
+        """
+                
         if self.is_connected == True:
             pb.disconnect()
 
@@ -496,7 +610,12 @@ class Robot_Cls(object):
         self.__external_object.append(object_id)
 
     def Remove_All_External_Objects(self):
-        # Remove the loaded URDF model
+        """
+        Description:
+            A function to remove all models with the *.urdf extension from the PyBullet environment 
+            that were added using the 'Add_External_Object' function of the class.
+        """
+
         for _, external_obj in enumerate(self.__external_object):
             pb.removeBody(external_obj)
 
@@ -524,16 +643,17 @@ class Robot_Cls(object):
         """
                 
         try:
-            assert mode in ['Zero', 'Home', 'Individual'] and self.__Robot_Parameters_Str.Theta.Zero.size == theta.size
+            assert mode in ['Zero', 'Home', 'Individual'] 
 
             if mode == 'Individual':
+                assert self.__Robot_Parameters_Str.Theta.Zero.size == theta.size
+                
                 theta_internal = theta
             else:
                 theta_internal = self.Theta_0 if mode == 'Zero' else self.__Robot_Parameters_Str.Theta.Home
 
             for i, (th_i, th_i_limit, th_index) in enumerate(zip(theta_internal, self.__Robot_Parameters_Str.Theta.Limit, 
                                                                  self.__theta_index)):
-
                 if th_i_limit[0] <= th_i <= th_i_limit[1]:
                     # Reset the state (position) of the joint.
                     pb.resetJointState(self.__robot_id, th_index, th_i) 
@@ -599,7 +719,7 @@ class Robot_Cls(object):
                         print(f'[WARNING] The desired input joint {th_i} in index {i} is out of limit.')
                         return False
 
-                # ...
+                # Update the state of the dynamic system.
                 self.__Step()
 
             return True
