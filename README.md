@@ -20,7 +20,7 @@ Linux, macOS
 
 ## Project Description
 
-Text ...
+For information about the PyBullet physics simulation environment, please visit the [PyBullet](https://pybullet.org/wordpress/) website.
 
 ## Simple Demonstration: Mechanism
 
