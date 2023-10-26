@@ -1,7 +1,7 @@
 # PyBullet Template: Industrial Robotics
 
 <p align="center">
-<img src=https://github.com/rparak/Programming-for-robots-and-manipulators-VRM/blob/main/images/lab.png width="700" height="475">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/I4C.png width="800" height="350">
 </p>
 
 ## Requirements
