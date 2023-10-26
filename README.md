@@ -19,6 +19,7 @@ Linux, macOS
 ```
 
 ## Project Description
+The project focuses on a simple demonstration of how to work with a PyBullet physics simulation environment. The primary goal of the project was to present a simulation of robotic structures that are part of the Industry 4.0 Cell (I4C) at the Institute of Automation and Computer Science, Faculty of Mechanical Engineering, Brno University of Technology.
 
 For information about the PyBullet physics simulation environment, please visit the [PyBullet](https://pybullet.org/wordpress/) website.
 
