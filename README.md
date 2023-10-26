@@ -23,6 +23,13 @@ The project focuses on a simple demonstration of how to work with a PyBullet phy
 
 For information about the PyBullet physics simulation environment, please visit the [PyBullet](https://pybullet.org/wordpress/) website.
 
+The repository also contains libraries, such as transformation and trajectory generation, along with the necessary project-related functions. See links below.
+
+[/rparak/Transformation](https://github.com/rparak/Transformation)
+[/rparak/Trajectory_Generation](https://github.com/rparak/Trajectory_Generation)
+
+The project will primarily be used as a template for the solution of the more complex problems in the future.
+
 ## Simple Demonstration: Mechanism
 
 A simple demonstration of how to work with a designed class to control the mechanism in the PyBullet environment is provided in the evaluation folders.
