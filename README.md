@@ -28,7 +28,7 @@ The repository also contains libraries, such as transformation and trajectory ge
 [/rparak/Transformation](https://github.com/rparak/Transformation)
 [/rparak/Trajectory_Generation](https://github.com/rparak/Trajectory_Generation)
 
-The project will primarily be used as a template for the solution of the more complex problems in the future.
+The project will primarily be used as a template for the solution of the more complex problems in the future (inverse kinematics, motion planning, intelligent grasping, etc.)
 
 ## Simple Demonstration: Mechanism
 
