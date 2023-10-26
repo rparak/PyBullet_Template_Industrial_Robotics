@@ -20,7 +20,7 @@ Description:
 # Set the structure of the main parameters of the robot.
 CONST_ROBOT_TYPE = Parameters.ABB_IRB_120_Str
 # Locate the path to the project folder.
-CONST_PROJECT_FOLDER = os.getcwd().split('PyBullet_Template')[0] + 'PyBullet_Template'
+CONST_PROJECT_FOLDER = os.getcwd().split('PyBullet_Template_Industrial_Robotics')[0] + 'PyBullet_Template_Industrial_Robotics'
 # The properties of the PyBullet environment.
 #   Note:
 #      ABB_IRB_14000_{L, R}_Str:
