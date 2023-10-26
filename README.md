@@ -23,16 +23,16 @@ Linux, macOS
 ```
 
 ## Project Description
-The project focuses on a simple demonstration of how to work with a PyBullet physics simulation environment. The primary goal of the project was to present a simulation of robotic structures that are part of the Industry 4.0 Cell (I4C) at the Institute of Automation and Computer Science, Faculty of Mechanical Engineering, Brno University of Technology.
+The project focuses on a straightforward illustration of how to use a PyBullet physics simulation environment. The primary purpose of the research was to present a simulation of robotic structures that are part of the Industry 4.0 Cell (I4C) at the Institute of Automation and Computer Science, Faculty of Mechanical Engineering, Brno University of Technology.
 
 For information about the PyBullet physics simulation environment, please visit the [PyBullet](https://pybullet.org/wordpress/) website.
 
-The repository also contains libraries, such as transformation and trajectory generation, along with the necessary project-related functions. See links below.
+The repository also includes libraries for transformation and trajectory generation, as well as project-related functions. See the links provided below.
 
 [/rparak/Transformation](https://github.com/rparak/Transformation)
 [/rparak/Trajectory_Generation](https://github.com/rparak/Trajectory_Generation)
 
-The project will primarily be used as a template for the solution of the more complex problems in the future (inverse kinematics, motion planning, intelligent grasping, etc.)
+The project will largely serve as a template for future solutions to more complex problems (inverse kinematics, motion planning, intelligent grasping, and so on).
 
 ## Simple Demonstration: Mechanism
 
