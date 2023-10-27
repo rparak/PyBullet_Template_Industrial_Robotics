@@ -45,11 +45,19 @@ A simple demonstration of how to work with a designed class to control the mecha
 $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Environment> python3 test_mechanism.py
 ```
 
+<p align="center">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/mechanism_1.png width="800" height="450">
+</p>
+
 **2\ A program that demonstrates simple trajectory generation in the PyBullet environment using a designed class.**
 
 ```bash
 $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_mechanism.py
 ```
+
+<p align="center">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/mechanism_2.png width="800" height="450">
+</p>
 
 ## Simple Demonstration: Robotic Arm
 
