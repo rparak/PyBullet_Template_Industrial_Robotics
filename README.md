@@ -56,7 +56,7 @@ $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_
 ```
 
 <p align="center">
-<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/mechanism_2.png width="550" height="150">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/mechanism_2.png width="550" height="250">
 </p>
 
 ## Simple Demonstration: Robotic Arm
