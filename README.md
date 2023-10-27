@@ -1,7 +1,7 @@
 # PyBullet Template: Industrial Robotics
 
 <p align="center">
-<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/Background.png width="800" height="350">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/Background.png width="800" height="450">
 </p>
 
 ## Requirements
