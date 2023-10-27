@@ -46,7 +46,7 @@ $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Environment> python3 t
 ```
 
 <p align="center">
-<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/mechanism_1.png width="550" height="400">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/mechanism_1.png width="550" height="350">
 </p>
 
 **2\ A program that demonstrates simple trajectory generation in the PyBullet environment using a designed class.**
@@ -56,7 +56,7 @@ $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_
 ```
 
 <p align="center">
-<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/mechanism_2.png width="800" height="350">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/mechanism_2.png width="550" height="150">
 </p>
 
 ## Simple Demonstration: Robotic Arm
