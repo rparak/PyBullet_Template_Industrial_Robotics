@@ -59,7 +59,7 @@ def main():
                                                0.5, True, False)
     
         # Set the absolute position of the mechanism joint.
-        in_position = PyBullet_Mechanism_Cls.Set_Absolute_Joint_Position(theta, 100.0, 0.0, 3.0)
+        in_position = PyBullet_Mechanism_Cls.Set_Absolute_Joint_Position(theta, 100.0, 0.0, 5.0)
 
         if in_position == True:
             # Change the desired absolute position of the mechanism joint.
