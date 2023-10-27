@@ -46,7 +46,7 @@ $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Environment> python3 t
 ```
 
 <p align="center">
-<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/mechanism_1.png width="600" height="450">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/mechanism_1.png width="600" height="400">
 </p>
 
 **2\ A program that demonstrates simple trajectory generation in the PyBullet environment using a designed class.**
