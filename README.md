@@ -39,13 +39,13 @@ The project will largely serve as a template for future solutions to more comple
 
 A simple demonstration of how to work with a designed class to control the mechanism in the PyBullet environment is provided in the evaluation folders.
 
-**1\ A program to test the functionality of the PyBullet environment for controlling the mechanism structure.**
+**1\ A program to test the functionality of the designed class.**
 
 ```bash
 $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Environment> python3 test_mechanism.py
 ```
 
-**2\  A program that demonstrates how to work with a specific class to control a mechanism in PyBullet environment.**
+**2\ A program that demonstrates simple trajectory generation in the PyBullet environment using a designed class.**
 
 ```bash
 $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_mechanism.py
@@ -55,13 +55,13 @@ $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_
 
 A simple demonstration of how to work with a designed class to control the mechanism in the PyBullet environment is provided in the evaluation folders.
 
-**1\ A program to test the functionality of the PyBullet environment for controlling the robot structure.**
+**1\ A program to test the functionality of the designed class.**
 
 ```bash
 $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Environment> python3 test_robot.py
 ```
 
-**2\ A program that demonstrates how to work with a specific class to control a robotic arm in PyBullet environment.**
+**2\ A program that demonstrates simple trajectory generation in the PyBullet environment using a designed class.**
 
 ```bash
 $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_robot.py
