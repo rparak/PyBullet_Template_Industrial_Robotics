@@ -33,7 +33,7 @@ CONST_PYBULLET_ENV_PROPERTIES = {'Enable_GUI': 0, 'fps': 100,
 def main():
     """
     Description:
-        A program that demonstrates how to work with a specific class to control a robotic arm in PyBullet environment.
+        A program that demonstrates simple trajectory generation in the PyBullet environment using a designed class.
     """
     
     # Initialization of the structure of the main parameters of the robot.
