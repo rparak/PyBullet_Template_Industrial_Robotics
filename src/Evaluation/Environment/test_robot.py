@@ -33,7 +33,7 @@ CONST_PYBULLET_ENV_PROPERTIES = {'Enable_GUI': 0, 'fps': 100,
 def main():
     """
     Description:
-        A program to test the functionality of the PyBullet environment for controlling the robot structure.
+        A program to test the functionality of the designed class.
     """
     
     # Initialization of the structure of the main parameters of the robot.
