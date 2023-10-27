@@ -30,6 +30,7 @@ For information about the PyBullet physics simulation environment, please visit 
 The repository also includes libraries for transformation and trajectory generation, as well as project-related functions. See the links provided below.
 
 [/rparak/Transformation](https://github.com/rparak/Transformation)
+
 [/rparak/Trajectory_Generation](https://github.com/rparak/Trajectory_Generation)
 
 The project will largely serve as a template for future solutions to more complex problems (inverse kinematics, motion planning, intelligent grasping, and so on).
