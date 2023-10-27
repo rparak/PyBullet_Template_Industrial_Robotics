@@ -69,11 +69,19 @@ A simple demonstration of how to work with a designed class to control the robot
 $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Environment> python3 test_robot.py
 ```
 
+<p align="center">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/robot_1.png width="550" height="400">
+</p>
+
 **2\ A program that demonstrates simple trajectory generation in the PyBullet environment using a designed class.**
 
 ```bash
 $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_robot.py
 ```
+
+<p align="center">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/robot_2.png width="800" height="350">
+</p>
 
 ## YouTube
 
