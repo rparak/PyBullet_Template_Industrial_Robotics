@@ -53,7 +53,7 @@ $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_
 
 ## Simple Demonstration: Robotic Arm
 
-A simple demonstration of how to work with a designed class to control the mechanism in the PyBullet environment is provided in the evaluation folders.
+A simple demonstration of how to work with a designed class to control the robotic arm in the PyBullet environment is provided in the evaluation folders.
 
 **1\ A program to test the functionality of the designed class.**
 
