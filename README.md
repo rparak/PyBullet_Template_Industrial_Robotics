@@ -80,7 +80,7 @@ $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_
 ```
 
 <p align="center">
-<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/robot_2.png width="550" height="600">
+<img src=https://github.com/rparak/PyBullet_Template_Industrial_Robotics/blob/main/images/robot_2.png width="550" height="700">
 </p>
 
 ## YouTube
