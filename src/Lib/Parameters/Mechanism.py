@@ -40,9 +40,6 @@ class Theta_Parameters_Str(object):
     """
     Description:
         The auxiliary structure of the joint (theta) parameters.
-
-        Note:
-            Private structure.
     """
 
     # Zero absolute position of each joint.
@@ -76,9 +73,6 @@ class T_Parameters_Str:
     """
     Description:
         The auxiliary structure of the homogeneous transformation matrix {T} parameters.
-
-        Note:
-            Private structure.
     """
 
     # Homogeneous transformation matrix of the base.
