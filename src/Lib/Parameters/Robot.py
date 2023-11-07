@@ -131,7 +131,8 @@ class Robot_Parameters_Str:
 
     Initialization of the Class (structure):
         Input:
-            (1) name [string]: Name of the robotic structure.
+            (1) Name [string]: Name of the robotic structure.
+            (2) Id [int]: Identification number.
 
     Example:
         Initialization:
