@@ -94,8 +94,8 @@ class Mechanism_Parameters_Str:
 
     Initialization of the Class (structure):
         Input:
-            (1) name [string]: Name of the mechanism structure.
-
+            (1) Name [string]: Name of the mechanism structure.
+            (2) Id [int]: Identification number.
     Example:
         Initialization:
             Cls = Mechanism_Parameters_Str(name)
