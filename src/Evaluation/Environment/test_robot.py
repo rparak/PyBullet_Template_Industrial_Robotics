@@ -58,7 +58,7 @@ def main():
     
     # The physical simulation is in progress.
     while PyBullet_Robot_Cls.is_connected == True:
-        pass
+        PyBullet_Robot_Cls.Step()
 
     # Disconnect the created environment from a physical server.
     PyBullet_Robot_Cls.Disconnect()

@@ -245,7 +245,7 @@ class Mechanism_Cls(object):
         return {'Yaw': parameters[8], 'Pitch': parameters[9], 'Distance': parameters[10], 
                 'Position': parameters[11]}
     
-    def __Step(self) -> None:
+    def Step(self) -> None:
         """
         Description:
             A function to perform all the actions in a single forward dynamics 
@@ -400,7 +400,7 @@ class Mechanism_Cls(object):
                     return False
 
                 # Update the state of the dynamic system.
-                self.__Step()
+                self.Step()
 
             return True
             
@@ -620,7 +620,7 @@ class Robot_Cls(object):
         return {'Yaw': parameters[8], 'Pitch': parameters[9], 'Distance': parameters[10], 
                 'Position': parameters[11]}
     
-    def __Step(self) -> None:
+    def Step(self) -> None:
         """
         Description:
             A function to perform all the actions in a single forward dynamics 
@@ -788,7 +788,7 @@ class Robot_Cls(object):
                         return False
 
                 # Update the state of the dynamic system.
-                self.__Step()
+                self.Step()
 
             return True
             
