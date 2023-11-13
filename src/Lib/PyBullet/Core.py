@@ -219,7 +219,6 @@ class Mechanism_Cls(object):
         
         return self.__Mechanism_Parameters_Str.T.Base @ T_Slider_new @ self.__Mechanism_Parameters_Str.T.Shuttle
 
-    @property
     def Get_Camera_Parameters(self) -> tp.Dict:
         """
         Description:
@@ -594,7 +593,6 @@ class Robot_Cls(object):
                 
         return Kinematics.Forward_Kinematics(self.Theta, 'Fast', self.__Robot_Parameters_Str)[1]
 
-    @property
     def Get_Camera_Parameters(self) -> tp.Dict:
         """
         Description:
