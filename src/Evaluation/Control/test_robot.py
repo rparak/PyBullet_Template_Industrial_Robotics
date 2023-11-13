@@ -67,7 +67,7 @@ def main():
             # Change the desired absolute position of the robot joint.
             theta = Robot_Str.Theta.Home if (theta == Robot_Str.Theta.Zero).all() else Robot_Str.Theta.Zero
 
-            # Remove all models with from the PyBullet environment.
+            # Remove all models from the PyBullet environment.
             PyBullet_Robot_Cls.Remove_All_External_Objects()
             in_position = False
 
