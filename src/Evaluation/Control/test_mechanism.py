@@ -65,7 +65,7 @@ def main():
             # Change the desired absolute position of the mechanism joint.
             theta = Mechanism_Str.Theta.Home if theta == Mechanism_Str.Theta.Zero else Mechanism_Str.Theta.Zero
 
-            # Remove all models with from the PyBullet environment.
+            # Remove all models from the PyBullet environment.
             PyBullet_Mechanism_Cls.Remove_All_External_Objects()
             in_position = False
 
