@@ -51,7 +51,7 @@ def main():
     T = Mechanism_Str.T.Base @ T_Slider_new @ Mechanism_Str.T.Shuttle
 
     # Add a viewpoint with the correct transformation to the end-effector of the structure.
-    PyBullet_Mechanism_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', T, None, 
+    PyBullet_Mechanism_Cls.Add_External_Object(f'{CONST_PROJECT_FOLDER}/URDFs/Viewpoint/Viewpoint.urdf', T, None, 
                                                0.5, True, False)
     
     # The physical simulation is in progress.

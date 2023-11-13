@@ -55,9 +55,9 @@ def main():
         T = Kinematics.Forward_Kinematics(theta, 'Fast', Robot_Str)[1]
 
         # Add a viewpoint (+ sphere) with the correct transformation to the end-effector of the structure.
-        PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Primitives/Sphere/Sphere.urdf', T, [0.0, 1.0, 0.0, 0.25], 
+        PyBullet_Robot_Cls.Add_External_Object(f'{CONST_PROJECT_FOLDER}/URDFs/Primitives/Sphere/Sphere.urdf', T, [0.0, 1.0, 0.0, 0.25], 
                                                0.025, True, False)
-        PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', T, None, 
+        PyBullet_Robot_Cls.Add_External_Object(f'{CONST_PROJECT_FOLDER}/URDFs/Viewpoint/Viewpoint.urdf', T, None, 
                                                0.5, True, False)
             
         # Set the absolute position of the robot joints.

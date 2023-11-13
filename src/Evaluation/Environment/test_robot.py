@@ -53,8 +53,8 @@ def main():
     T = Kinematics.Forward_Kinematics(theta, 'Fast', Robot_Str)[1]
     
     # Add a viewpoint with the correct transformation to the end-effector of the structure.
-    PyBullet_Robot_Cls.Add_External_Object('/../../../URDFs/Viewpoint/Viewpoint.urdf', T, None, 
-                                            0.5, True, False)
+    PyBullet_Robot_Cls.Add_External_Object(f'{CONST_PROJECT_FOLDER}/URDFs/Viewpoint/Viewpoint.urdf', T, None, 
+                                           0.5, True, False)
     
     # The physical simulation is in progress.
     while PyBullet_Robot_Cls.is_connected == True:
