@@ -25,7 +25,7 @@ CONST_PROJECT_FOLDER = os.getcwd().split('PyBullet_Template_Industrial_Robotics'
 #   Note:
 #      ABB_IRB_14000_{L, R}_Str:
 #       'External_Base': f'{CONST_PROJECT_FOLDER}/URDFs/Robots/ABB_IRB_14000_Base/ABB_IRB_14000_Base.urdf'
-CONST_PYBULLET_ENV_PROPERTIES = {'Enable_GUI': 0, 'fps': 100, 
+CONST_PYBULLET_ENV_PROPERTIES = {'Enable_GUI': True, 'fps': 100, 
                                  'External_Base': None,
                                  'Camera': {'Yaw': 70.0, 'Pitch': -32.0, 'Distance':1.3, 
                                             'Position': [0.05, -0.10, 0.06]}}
