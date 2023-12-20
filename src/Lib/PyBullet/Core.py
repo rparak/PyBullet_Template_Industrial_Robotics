@@ -162,7 +162,7 @@ class Mechanism_Cls(object):
         # Configure settings for the built-in OpenGL visualizer.
         pb.configureDebugVisualizer(pb.COV_ENABLE_RENDERING, 1)
         pb.configureDebugVisualizer(pb.COV_ENABLE_SHADOWS, 1)
-        pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, enable_gui)
+        pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
         pb.configureDebugVisualizer(pb.COV_ENABLE_MOUSE_PICKING, 0)
 
         # Load a physics model of the plane.
