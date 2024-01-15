@@ -1,17 +1,17 @@
 # System (Default)
 import sys
 #   Add access if it is not in the system path.
-if '../' + 'src' not in sys.path:
-    sys.path.append('../..')
+if '../../' + 'src' not in sys.path:
+    sys.path.append('../../' + 'src')
 # OS (Operating system interfaces)
 import os
 # Custom Lib.:
-#   ../Lib/Parameters/Mechanism
-import Lib.Parameters.Mechanism as Parameters
-#   ../Lib/PyBullet.Core
-import Lib.PyBullet.Core
-#   ../Lib/Transformation/Core
-from Lib.Transformation.Core import Get_Translation_Matrix
+#   ../Parameters/Mechanism
+import Parameters.Mechanism as Parameters
+#   ../PyBullet.Core
+import PyBullet.Core
+#   ../Transformation/Core
+from Transformation.Core import Get_Translation_Matrix
 
 """
 Description:
@@ -39,7 +39,7 @@ def main():
     theta = Mechanism_Str.Theta.Home
 
     # Initialization of the class to work with a mechanism object in a PyBullet environment.
-    PyBullet_Mechanism_Cls = Lib.PyBullet.Core.Mechanism_Cls(Mechanism_Str, f'{CONST_PROJECT_FOLDER}/URDFs/Mechanisms/{Mechanism_Str.Name}/{Mechanism_Str.Name}.urdf', 
+    PyBullet_Mechanism_Cls = PyBullet.Core.Mechanism_Cls(Mechanism_Str, f'{CONST_PROJECT_FOLDER}/URDFs/Mechanisms/{Mechanism_Str.Name}/{Mechanism_Str.Name}.urdf', 
                                                              CONST_PYBULLET_ENV_PROPERTIES)
 
     # Reset the absolute position of the mechanism joint to the 'Individual'.

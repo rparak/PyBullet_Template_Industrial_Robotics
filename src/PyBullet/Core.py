@@ -35,16 +35,16 @@ import pybullet_data
 # Time (Time access and conversions)
 import time
 # Custom Lib.:
-#   ../Lib/Parameters/Robot
-import Lib.Parameters.Robot
-#   ../Lib/Parameters/Mechanism
-import Lib.Parameters.Mechanism
-#   ../Lib/Trajectory/Utilities
-import Lib.Trajectory.Utilities
-#   ../Lib/Transformation/Core
-from Lib.Transformation.Core import Homogeneous_Transformation_Matrix_Cls as HTM_Cls, Get_Translation_Matrix
-#   ../Lib/Kinematics/Core
-import Lib.Kinematics.Core as Kinematics
+#   ../Parameters/Robot
+import Parameters.Robot
+#   ../Parameters/Mechanism
+import Parameters.Mechanism
+#   ../Trajectory/Utilities
+import Trajectory.Utilities
+#   ../Transformation/Core
+from Transformation.Core import Homogeneous_Transformation_Matrix_Cls as HTM_Cls, Get_Translation_Matrix
+#   ../Kinematics/Core
+import Kinematics.Core as Kinematics
 
 """
 Description:
@@ -79,7 +79,7 @@ class Mechanism_Cls(object):
             Initialization:
                 # Assignment of the variables.
                 #   Example for the SMC LEFB25UNZS 1400C mechanism.
-                Mechanism_Parameters_Str = Lib.Parameters.Mechanism.SMC_LEFB25_1400_0_1_Str
+                Mechanism_Parameters_Str = Parameters.Mechanism.SMC_LEFB25_1400_0_1_Str
                 #   The properties of the PyBullet environment.
                 env_properties = {'Enable_GUI': True, 'fps': 100, 
                                   'Camera': {'Yaw': 70.0, 'Pitch': -32.0, 'Distance':1.3, 
@@ -97,7 +97,7 @@ class Mechanism_Cls(object):
                 Cls.Set_Absolute_Joint_Position(0.0, 100.0, 0.0, 1.0)
     """
         
-    def __init__(self, Mechanism_Parameters_Str: Lib.Parameters.Mechanism.Mechanism_Parameters_Str, urdf_file_path: str, properties: tp.Dict) -> None:
+    def __init__(self, Mechanism_Parameters_Str: Parameters.Mechanism.Mechanism_Parameters_Str, urdf_file_path: str, properties: tp.Dict) -> None:
         # << PRIVATE >> #
         self.__Mechanism_Parameters_Str = Mechanism_Parameters_Str
         self.__external_object = []
@@ -105,7 +105,7 @@ class Mechanism_Cls(object):
         self.__delta_time = 1.0/np.float64(properties['fps'])
 
         # Initialization of the class to generate trajectory.
-        self.__Trapezoidal_Cls = Lib.Trajectory.Utilities.Trapezoidal_Profile_Cls(delta_time=self.__delta_time)
+        self.__Trapezoidal_Cls = Trajectory.Utilities.Trapezoidal_Profile_Cls(delta_time=self.__delta_time)
 
         # Set the parameters of the PyBullet environment.
         self.__Set_Env_Parameters(properties['Enable_GUI'], properties['Camera'])
@@ -166,9 +166,9 @@ class Mechanism_Cls(object):
         pb.configureDebugVisualizer(pb.COV_ENABLE_MOUSE_PICKING, 0)
 
         # Load a physics model of the plane.
-        plane_id = pb.loadURDF('/../../../URDFs/Primitives/Plane/Plane.urdf', globalScaling=0.20, useMaximalCoordinates=True, useFixedBase=True)
+        plane_id = pb.loadURDF('/../../URDFs/Primitives/Plane/Plane.urdf', globalScaling=0.20, useMaximalCoordinates=True, useFixedBase=True)
         #   Change the texture of the loaded object.
-        pb.changeVisualShape(plane_id, -1, textureUniqueId=pb.loadTexture('/../../../Textures/Plane.png'))
+        pb.changeVisualShape(plane_id, -1, textureUniqueId=pb.loadTexture('/../../Textures/Plane.png'))
         pb.changeVisualShape(plane_id, -1, rgbaColor=[0.55, 0.55, 0.55, 0.95])
 
     @property
@@ -440,7 +440,7 @@ class Robot_Cls(object):
             Initialization:
                 # Assignment of the variables.
                 #   Example for the ABB IRB 120 robot.
-                Robot_Parameters_Str = Lib.Parameters.Robot.ABB_IRB_120_Str
+                Robot_Parameters_Str = Parameters.Robot.ABB_IRB_120_Str
                 #   The properties of the PyBullet environment.
                 env_properties = {'Enable_GUI': True, 'fps': 100, 'External_Base': None,
                                   'Camera': {'Yaw': 70.0, 'Pitch': -32.0, 'Distance':1.3, 
@@ -458,7 +458,7 @@ class Robot_Cls(object):
                 Cls.Set_Absolute_Joint_Position([0.0, 0.0, 0.0, 0.0, 0.0, 0.0], 100.0, 0.0, 1.0)
     """
 
-    def __init__(self, Robot_Parameters_Str: Lib.Parameters.Robot.Robot_Parameters_Str, urdf_file_path: str, properties: tp.Dict) -> None:
+    def __init__(self, Robot_Parameters_Str: Parameters.Robot.Robot_Parameters_Str, urdf_file_path: str, properties: tp.Dict) -> None:
         # << PRIVATE >> #
         self.__Robot_Parameters_Str = Robot_Parameters_Str
         self.__external_object = []
@@ -466,7 +466,7 @@ class Robot_Cls(object):
         self.__delta_time = 1.0/np.float64(properties['fps'])
 
         # Initialization of the class to generate trajectory.
-        self.__Polynomial_Cls = Lib.Trajectory.Utilities.Polynomial_Profile_Cls(delta_time=self.__delta_time)
+        self.__Polynomial_Cls = Trajectory.Utilities.Polynomial_Profile_Cls(delta_time=self.__delta_time)
 
         # Set the parameters of the PyBullet environment.
         self.__Set_Env_Parameters(properties['Enable_GUI'], properties['Camera'])
@@ -541,9 +541,9 @@ class Robot_Cls(object):
         pb.configureDebugVisualizer(pb.COV_ENABLE_MOUSE_PICKING, 0)
 
         # Load a physics model of the plane.
-        plane_id = pb.loadURDF('/../../../URDFs/Primitives/Plane/Plane.urdf', globalScaling=0.20, useMaximalCoordinates=True, useFixedBase=True)
+        plane_id = pb.loadURDF('/../../URDFs/Primitives/Plane/Plane.urdf', globalScaling=0.20, useMaximalCoordinates=True, useFixedBase=True)
         #   Change the texture of the loaded object.
-        pb.changeVisualShape(plane_id, -1, textureUniqueId=pb.loadTexture('/../../../Textures/Plane.png'))
+        pb.changeVisualShape(plane_id, -1, textureUniqueId=pb.loadTexture('/../../Textures/Plane.png'))
         pb.changeVisualShape(plane_id, -1, rgbaColor=[0.55, 0.55, 0.55, 0.95])
 
     @property

@@ -1,17 +1,17 @@
 # System (Default)
 import sys
 #   Add access if it is not in the system path.
-if '../' + 'src' not in sys.path:
-    sys.path.append('../..')
+if '../../' + 'src' not in sys.path:
+    sys.path.append('../../' + 'src')
 # OS (Operating system interfaces)
 import os
 # Custom Lib.:
-#   ../Lib/Parameters/Robot
-import Lib.Parameters.Robot as Parameters
-#   ../Lib/PyBullet/Core
-import Lib.PyBullet.Core
-#   ../Lib/Kinematics/Core
-import Lib.Kinematics.Core as Kinematics
+#   ../Parameters/Robot
+import Parameters.Robot as Parameters
+#   ../PyBullet/Core
+import PyBullet.Core
+#   ../Kinematics/Core
+import Kinematics.Core as Kinematics
 
 """
 Description:
@@ -43,7 +43,7 @@ def main():
     theta = Robot_Str.Theta.Home
     
     # Initialization of the class to work with a robotic arm object in a PyBullet environment.
-    PyBullet_Robot_Cls = Lib.PyBullet.Core.Robot_Cls(Robot_Str, f'{CONST_PROJECT_FOLDER}/URDFs/Robots/{Robot_Str.Name}/{Robot_Str.Name}.urdf', 
+    PyBullet_Robot_Cls = PyBullet.Core.Robot_Cls(Robot_Str, f'{CONST_PROJECT_FOLDER}/URDFs/Robots/{Robot_Str.Name}/{Robot_Str.Name}.urdf', 
                                                      CONST_PYBULLET_ENV_PROPERTIES)
     
     # Reset the absolute position of the robot joints to the 'Zero'.

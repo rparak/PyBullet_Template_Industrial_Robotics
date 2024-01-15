@@ -32,10 +32,10 @@ from dataclasses import dataclass, field
 # Typing (Support for type hints)
 import typing as tp
 # Custom Lib.:
-#   ../Lib/Transformation/Core
-from Lib.Transformation.Core import Homogeneous_Transformation_Matrix_Cls as HTM_Cls
-#   ../Lib/Transformation/Utilities/Mathematics
-import Lib.Transformation.Utilities.Mathematics as Mathematics
+#   ../Transformation/Core
+from Transformation.Core import Homogeneous_Transformation_Matrix_Cls as HTM_Cls
+#   ../Transformation/Utilities/Mathematics
+import Transformation.Utilities.Mathematics as Mathematics
 
 @dataclass
 class DH_Parameters_Str:

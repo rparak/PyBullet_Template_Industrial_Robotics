@@ -30,14 +30,14 @@ import numpy as np
 # Typing (Support for type hints)
 import typing as tp
 # Custom Lib.:
-#   ../Lib/Parameters/Robot
-import Lib.Parameters.Robot as Parameters
-#   ../Lib/Kinematics/Utilities/Forward_Kinematics
-import Lib.Kinematics.Utilities.Forward_Kinematics as Utilities
-#   ../Lib/Kinematics/Utilities/General
-import Lib.Kinematics.Utilities.General as General
-#   ../Lib/Transformation/Core
-from Lib.Transformation.Core import Homogeneous_Transformation_Matrix_Cls as HTM_Cls
+#   ../Parameters/Robot
+import Parameters.Robot as Parameters
+#   ../Kinematics/Utilities/Forward_Kinematics
+import Kinematics.Utilities.Forward_Kinematics as Utilities
+#   ../Kinematics/Utilities/General
+import Kinematics.Utilities.General as General
+#   ../Transformation/Core
+from Transformation.Core import Homogeneous_Transformation_Matrix_Cls as HTM_Cls
 
 """
 Description:

@@ -3,8 +3,8 @@ import numpy as np
 # Typing (Support for type hints)
 import typing as tp
 # Custom Lib.:
-#   ../Lib/Parameters/Robot
-import Lib.Parameters.Robot as Parameters
+#   ../Parameters/Robot
+import Parameters.Robot as Parameters
 
 def Check_Theta_Limit(theta: tp.List[float], Robot_Parameters_Str: Parameters.Robot_Parameters_Str) -> tp.List[bool]:
     """
