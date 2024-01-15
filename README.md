@@ -42,7 +42,7 @@ A simple demonstration of how to work with a designed class to control the mecha
 **1\ A program to test the functionality of the designed class.**
 
 ```bash
-$ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Environment> python3 test_mechanism.py
+$ ..\PyBullet_Template_Industrial_Robotics\Evaluation\Environment> python3 test_mechanism.py
 ```
 
 <p align="center">
@@ -52,7 +52,7 @@ $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Environment> python3 t
 **2\ A program that demonstrates simple trajectory generation in the PyBullet environment using a designed class.**
 
 ```bash
-$ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_mechanism.py
+$ ..\PyBullet_Template_Industrial_Robotics\Evaluation\Control> python3 test_mechanism.py
 ```
 
 <p align="center">
@@ -66,7 +66,7 @@ A simple demonstration of how to work with a designed class to control the robot
 **1\ A program to test the functionality of the designed class.**
 
 ```bash
-$ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Environment> python3 test_robot.py
+$ ..\PyBullet_Template_Industrial_Robotics\Evaluation\Environment> python3 test_robot.py
 ```
 
 <p align="center">
@@ -76,7 +76,7 @@ $ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Environment> python3 t
 **2\ A program that demonstrates simple trajectory generation in the PyBullet environment using a designed class.**
 
 ```bash
-$ ..\PyBullet_Template_Industrial_Robotics\src\Evaluation\Control> python3 test_robot.py
+$ ..\PyBullet_Template_Industrial_Robotics\Evaluation\Control> python3 test_robot.py
 ```
 
 <p align="center">
